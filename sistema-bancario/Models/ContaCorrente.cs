@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata; // ⚠️ Using desnecessário — não é utilizado em nenhum lugar do código, pode ser removido
 using System.Threading.Tasks;
 
 namespace sistema_bancario.Models

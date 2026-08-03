@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\39596123890\\Desktop\\sistema-bancario\\sistema-bancario.csproj",
+      "projectUniqueName": "C:\\Users\\39596123890\\Desktop\\ATV-s-2-Semestre\\sistema-bancario\\sistema-bancario.csproj",
       "projectName": "sistema-bancario",
-      "projectPath": "C:\\Users\\39596123890\\Desktop\\sistema-bancario\\sistema-bancario.csproj",
+      "projectPath": "C:\\Users\\39596123890\\Desktop\\ATV-s-2-Semestre\\sistema-bancario\\sistema-bancario.csproj",
       "packagesPath": "C:\\Users\\39596123890\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\39596123890\\Desktop\\sistema-bancario\\obj\\",
+      "outputPath": "C:\\Users\\39596123890\\Desktop\\ATV-s-2-Semestre\\sistema-bancario\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
