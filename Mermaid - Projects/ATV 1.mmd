@@ -1,0 +1,67 @@
+---
+config:
+  layout: elk
+  theme: base
+---
+erDiagram
+	direction TB
+	TIPO_USUARIO {
+		UNIQUEIDENTIFIER IDTipoUsuario PK ""  
+		VARCHAR(100) Titulo  ""  
+	}
+
+	USUARIO {
+		UNIQUEIDENTIFIER IDUsuario PK ""  
+		UNIQUEIDENTIFIER IDTipoUsuario FK ""  
+		VARCHAR(100) Nome  ""  
+		VARCHAR(256) Email  "UNIQUE"  
+		VARCHAR(60) Senha  ""  
+	}
+
+	INSTITUICAO {
+		UNIQUEIDENTIFIER IDInstituicao PK ""  
+		VARCHAR(100) NomeFantasia  ""  
+		VARCHAR(100) Endereco  ""  
+		VARCHAR(14) CNPJ  "UNIQUE"  
+	}
+
+	EVENTO {
+		UNIQUEIDENTIFIER IDEvento PK ""  
+		UNIQUEIDENTIFIER IDTipoEvento FK ""  
+		UNIQUEIDENTIFIER IDInstituicao  ""  
+		VARCHAR(100) NomeEvento  "NOT NULL"  
+		TEXT Descricao  "NOT NULL"  
+		DATETIME DataEvento  "NOT NULL"  
+		VARCHAR(200) URL_Imagem  ""  
+	}
+
+	TIPO_EVENTO {
+		UNIQUEIDENTIFIER IDTipoEvento PK ""  
+		VARCHAR(100) TituloTipoEvento  "NOT NULL"  
+	}
+
+	COMENTARIO_EVENTO {
+		UNIQUEIDENTIFIER IDComentario PK ""  
+		UNIQUEIDENTIFIER IDUsuario FK ""  
+		UNIQUEIDENTIFIER IDEvento FK ""  
+		VARCHAR(250) Descricao  "NOT NULL"  
+		DATETIME DataComentario  "NOT NULL"  
+		BIT Exibe  "NOT NULL"  
+	}
+
+	PRESENCA {
+		UNIQUEIDENTIFIER IDPresenca PK ""  
+		UNIQUEIDENTIFIER IDUsuario FK ""  
+		UNIQUEIDENTIFIER IDEvento FK ""  
+		BIT Situacao FK "NOT NULL"  
+	}
+
+	TIPO_USUARIO||--o{USUARIO:"CLASSIFICA"
+	INSTITUICAO||--o{EVENTO:"SEDIA"
+	TIPO_EVENTO||--o{EVENTO:"CLASSIFICA"
+	USUARIO||--o{COMENTARIO_EVENTO:"CONFIRMA"
+	EVENTO||--o{COMENTARIO_EVENTO:"POSSUI"
+	USUARIO||--o{COMENTARIO_EVENTO:"ESCREVE"
+	EVENTO||--o{COMENTARIO_EVENTO:"RECEBE"
+	PRESENCA}o--||EVENTO:"RECEBE"
+	USUARIO}o--||PRESENCA:"POSSUI"
