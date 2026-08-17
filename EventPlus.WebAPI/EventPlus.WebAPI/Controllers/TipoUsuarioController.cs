@@ -64,7 +64,7 @@ namespace EventPlus.WebAPI.Controllers
 
             var tipoUsuario = new TipoUsuario
             {
-                TituloTipoUsuario = dto.Titulo
+                TituloTipoUsuario = dto.TituloTipoUsuario
             };
 
             await _tipoUsuario.Cadastrar(tipoUsuario);
@@ -78,7 +78,7 @@ namespace EventPlus.WebAPI.Controllers
         {
             var tipoUsuario = new TipoUsuario
             {
-                TituloTipoUsuario = dto.Titulo
+                TituloTipoUsuario = dto.TituloTipoUsuario
             };
 
             await _tipoUsuario.Atualizar(id, tipoUsuario);

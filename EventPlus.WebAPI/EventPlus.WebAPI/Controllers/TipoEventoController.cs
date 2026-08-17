@@ -12,25 +12,25 @@ namespace EventPlus.WebAPI.Controllers
 
 
     [ApiController]
-    public class EventoController : ControllerBase
+    public class TipoEventoController : ControllerBase
     {
-        private readonly ITipoUsuario _tipoUsuario;
+        private readonly ITipoEvento _tipoEvento;
 
 
-        public EventoController(IEvento tipoEvento)
+        public TipoEventoController(ITipoEvento tipoEvento)
         {
-            _tipoUsuario = tipoEvento;
+            _tipoEvento = tipoEvento;
         }
         [HttpGet("{id:guid}")]
 
         public async Task<IActionResult> BuscarPorId(Guid id)
         {
-            var tipoUsuarioBuscado = await _tipoUsuario.BuscarPorId(id);
+            var tipoEventoBuscado = await _tipoEvento.BuscarPorId(id);
 
-            if (tipoUsuarioBuscado == null)
+            if (tipoEventoBuscado == null)
                 return NotFound("Tipo Usuario nao encontrado.");
 
-            return Ok(tipoUsuarioBuscado);
+            return Ok(tipoEventoBuscado);
         }
 
 
@@ -43,7 +43,7 @@ namespace EventPlus.WebAPI.Controllers
         {
             try
             {
-                var tipos = await _tipoUsuario.Listar();
+                var tipos = await _tipoEvento.Listar();
 
                 return Ok(tipos);
 
@@ -54,42 +54,43 @@ namespace EventPlus.WebAPI.Controllers
             }
         }
         /// <summary>
-        /// cadastra um novo perfil de usuario
+        /// 
         /// </summary>
-        /// <param name="tipoUsuario">Perfil do usuario a ser cadstrado</param>
+        /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Cadastrar([FromBody] TipoUsuarioDTO dto)
+
+        public async Task<IActionResult> Cadastrar([FromBody] TipoEventoDTO dto)
         {
 
-            var tipoUsuario = new TipoUsuario
+            var tipoEvento = new TipoEvento
             {
-                TituloTipoUsuario = dto.Titulo
+                TituloTipoEvento = dto.TituloTipoEvento
             };
 
-            await _tipoUsuario.Cadastrar(tipoUsuario);
+            await _tipoEvento.Cadastrar(tipoEvento);
 
-            return StatusCode(201, tipoUsuario);
+            return StatusCode(201, tipoEvento);
         }
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Atualizar(Guid id,
-            [FromBody] TipoUsuarioDTO dto)
+            [FromBody] TipoEventoDTO dto)
         {
-            var tipoUsuario = new TipoUsuario
+            var tipoEvento = new TipoEvento
             {
-                TituloTipoUsuario = dto.Titulo
+                TituloTipoEvento = dto.TituloTipoEvento
             };
 
-            await _tipoUsuario.Atualizar(id, tipoUsuario);
+            await _tipoEvento.Atualizar(id, tipoEvento);
 
-            return Ok(tipoUsuario);
+            return Ok(tipoEvento);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Deletar(Guid id)
         {
-            await _tipoUsuario.Deletar(id);
+            await _tipoEvento.Deletar(id);
             return NoContent();
         }
 

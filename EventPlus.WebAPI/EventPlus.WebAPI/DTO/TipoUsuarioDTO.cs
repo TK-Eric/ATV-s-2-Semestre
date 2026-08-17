@@ -11,6 +11,6 @@ public class TipoUsuarioDTO
     /// Titulo do tipo usuario
     /// </summary>
     [Required (ErrorMessage = "O titulo é obrigatorio. ")]
-    [StringLength(100, ErrorMessage = "o titulo pode ter no mximo 100 caracteres.")]
-    public string Titulo { get; set; } = string.Empty;
+    [StringLength(100, ErrorMessage = "o titulo pode ter no maximo 100 caracteres.")]
+    public string TituloTipoUsuario { get; set; } = string.Empty;
 }
