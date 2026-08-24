@@ -1,0 +1,119 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Usuario
+meta:
+  id: wrk_0e1b69faed284c7da8c8f1a6a3f7f6f5
+  created: 1786976203531
+  modified: 1786976203531
+  description: ""
+collection:
+  - url: https://localhost:7021/api/Usuario/8ad7f436-60f0-44e1-a06a-4468764d7c8e
+    name: New Request
+    meta:
+      id: req_3918f899ab174725a5c1a87370ec9b08
+      created: 1786976211343
+      modified: 1786994608413
+      isPrivate: false
+      description: ""
+      sortKey: -1786976211343
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "Nome": "Gustavinho",
+          "Email": "pedrocaidro@gmail.com",
+          "Senha": "123456789",
+        	"IdTipoUsuario" : "98fa4ba7-6afb-4dc1-a128-0eab40287010" 
+        	
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://localhost:7021/api/Usuario
+    name: New Request
+    meta:
+      id: req_ad52cf0e0c034f4a8f799c0a9bd335ac
+      created: 1786977203558
+      modified: 1786979272361
+      isPrivate: false
+      description: ""
+      sortKey: -1786977203558
+    method: GET
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://localhost:7021/api/Usuario
+    name: New Request
+    meta:
+      id: req_1a1b1fb3119a4d52aab4686d74f72eea
+      created: 1786979261770
+      modified: 1786988503879
+      isPrivate: false
+      description: ""
+      sortKey: -1786979261770
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "Nome": "pedrinho",
+          "Email": "angelocaidro@gmail.com",
+          "Senha": "12345678",
+        	"IdTipoUsuario" : "5b1f0c81-cb1d-41e9-8ffd-de62690fb116"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://localhost:7021/api/Usuario/e16205ea-693f-484c-99e4-f14515322e4f
+    name: New Request
+    meta:
+      id: req_2a00fec6b98d4b1ba9affaf9a13daff7
+      created: 1786979435312
+      modified: 1786993513018
+      isPrivate: false
+      description: ""
+      sortKey: -1786979435312
+    method: DELETE
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_c2182207ad36fa9db394e0f86494c551056f20a6
+    created: 1786976203554
+    modified: 1786976203554
+environments:
+  name: Base Environment
+  meta:
+    id: env_c2182207ad36fa9db394e0f86494c551056f20a6
+    created: 1786976203550
+    modified: 1786976203550
+    isPrivate: false

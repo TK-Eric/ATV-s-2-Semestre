@@ -1,0 +1,85 @@
+﻿using EventPlus.WebAPI.BdContextEvent;
+using EventPlus.WebAPI.Interfaces;
+using EventPlus.WebAPI.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace EventPlus.WebAPI.Repositories
+{
+    public class InstituicaoRepository : IInstituicao
+    {
+        private readonly EventContext _dbContext;
+
+        public InstituicaoRepository(EventContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task Atualizar(Guid id, Instituicao instituicao)
+        {
+            var instituicaoBuscada = await _dbContext.Instituicao.FindAsync(id);
+
+            if (instituicaoBuscada != null)
+            {
+                instituicaoBuscada.IdInstituicao = instituicao.IdInstituicao;
+                _dbContext.Instituicao.Update(instituicaoBuscada);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public Task Atualizar(Guid id, Instituicao instituicao, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Atualizar(Guid id, IInstituicao instituicao)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Instituicao?> BuscarPorId(Guid id)
+        {
+            return await _dbContext.Instituicao.FirstOrDefaultAsync(i => i.IdInstituicao == id);
+        }
+
+        public async Task Cadastrar(Instituicao instituicao)
+        {
+            await _dbContext.Instituicao.AddAsync(instituicao);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task Deletar(Guid id)
+        {
+            var instituicaoBuscada = await _dbContext.Instituicao.FindAsync(id);
+            if (instituicaoBuscada != null)
+            {
+                _dbContext.Instituicao.Remove(instituicaoBuscada);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<Instituicao>> Listar()
+        {
+            return await _dbContext.Instituicao.AsNoTracking().ToListAsync();
+        }
+
+        public Task<List<Instituicao>> ListarPorInscrito(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Instituicao>> ListarPorInstituicao(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TipoEvento?> ListarProximosEventos()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<Instituicao>> IInstituicao.BuscarPorId(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

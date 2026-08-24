@@ -1,0 +1,58 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: TipoEvento
+meta:
+  id: wrk_60d20fcdbcfa4d5796865484c78d04a4
+  created: 1786968550490
+  modified: 1786968550490
+  description: ""
+collection:
+  - url: https://localhost:7021/api/TipoEvento
+    name: New Request
+    meta:
+      id: req_642c616755094fb2a94830a6db37ffa2
+      created: 1786968565997
+      modified: 1786976440564
+      isPrivate: false
+      description: ""
+      sortKey: -1786968565997
+    method: GET
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://localhost:7021/api/TipoEvento/7b08525f-8854-459b-9926-fcbde38ead23
+    name: New Request
+    meta:
+      id: req_d530f30eb39f4c38abb6ef8ef497878a
+      created: 1786971177579
+      modified: 1786976194634
+      isPrivate: false
+      description: ""
+      sortKey: -1786971177579
+    method: POST
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_29edfbb08a70c28d430a9cd3d7a8ae81418c0440
+    created: 1786968550498
+    modified: 1786968550498
+environments:
+  name: Base Environment
+  meta:
+    id: env_29edfbb08a70c28d430a9cd3d7a8ae81418c0440
+    created: 1786968550495
+    modified: 1786968550495
+    isPrivate: false

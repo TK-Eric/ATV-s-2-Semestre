@@ -1,0 +1,130 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: TipoUsuario
+meta:
+  id: wrk_a21fcc97a0ef4bea959733c2ffde7e9d
+  created: 1786363966934
+  modified: 1786968533659
+  description: ""
+collection:
+  - url: https://localhost:7021/api/TipoUsuario
+    name: mostra todos caba (Usuario)
+    meta:
+      id: req_633ed55eb06b40588417bf588d00ec55
+      created: 1786364012088
+      modified: 1786969321429
+      isPrivate: false
+      description: ""
+      sortKey: -1786364012088
+    method: GET
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://localhost:7021/api/TipoUsuario
+    name: coloca os caba
+    meta:
+      id: req_8577c64d658a491791700505a656c5fd
+      created: 1786369464027
+      modified: 1786388846766
+      isPrivate: false
+      description: ""
+      sortKey: -1786369464027
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"Titulo":"adulto"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://localhost:7021/api/TipoUsuario/20de783f-345e-4de1-9f3c-c39680351810
+    name: mostrar um caba
+    meta:
+      id: req_2a39461759f44f789a68d4a10ccfaec3
+      created: 1786375176229
+      modified: 1786388859237
+      isPrivate: false
+      description: ""
+      sortKey: -1786375176229
+    method: GET
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://localhost:7021/api/TipoUsuario
+    name: obliterar
+    meta:
+      id: req_02468410934a49e19dfe77d4d575bb56
+      created: 1786382106345
+      modified: 1786388890063
+      isPrivate: false
+      description: ""
+      sortKey: -1786382106345
+    method: DELETE
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: https://localhost:7021/api/TipoUsuario/5b1f0c81-cb1d-41e9-8ffd-de62690fb116
+    name: transição de genero
+    meta:
+      id: req_b09756bc45cc40ea9de15abe2e9318f9
+      created: 1786387682026
+      modified: 1786389011805
+      isPrivate: false
+      description: ""
+      sortKey: -1786387682026
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"Titulo" : "Usuario"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_c655dfeae9f331a9ed396b7f0c4dda33d47587ec
+    created: 1786363966945
+    modified: 1786363966945
+environments:
+  name: Base Environment
+  meta:
+    id: env_c655dfeae9f331a9ed396b7f0c4dda33d47587ec
+    created: 1786363966939
+    modified: 1786363966939
+    isPrivate: false
