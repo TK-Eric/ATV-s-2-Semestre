@@ -2,6 +2,7 @@
 {
     public class SightengineSettings
     {
-        public string 
+        public string ApiUser { get; set; }
+        public string ApiSecret { get; set; }
     }
 }

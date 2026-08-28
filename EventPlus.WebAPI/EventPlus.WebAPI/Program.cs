@@ -34,7 +34,7 @@ builder.Services.AddScoped<ITipoUsuario, TipoUsuarioRepository>();
 builder.Services.AddScoped<ITipoEvento, TipoEventoRepository>();
 builder.Services.AddScoped<IUsuario, UsuarioRepository>();
 builder.Services.AddScoped<IComentario, ComentarioRepository>();
-builder.Services.AddScoped<IEvent, EventRepository>();
+builder.Services.AddScoped<IEvent, EventoRepository>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 // Configura a autenticação da API usando JWT (token de acesso)

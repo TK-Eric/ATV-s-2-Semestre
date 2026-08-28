@@ -8,8 +8,7 @@ namespace EventPlus.WebAPI.Interfaces
     public interface IEvent
     {
         // Promete um jeito de cadastrar (salvar) um novo evento
-        Task Cadastrar(Evento evento);
-
+        Task<Evento> Cadastrar(Evento evento);
         // Promete um jeito de atualizar um evento já existente,
         // usando o Id dele pra saber qual é
         Task Atualizar(Guid id, Evento evento);
@@ -27,5 +26,7 @@ namespace EventPlus.WebAPI.Interfaces
         // Promete um jeito de buscar um evento específico pelo Id
         // O "?" em "Evento?" significa que pode não achar nada e retornar nulo
         Task<Evento?> BuscarPorId(Guid id);
+        
+
     }
 }

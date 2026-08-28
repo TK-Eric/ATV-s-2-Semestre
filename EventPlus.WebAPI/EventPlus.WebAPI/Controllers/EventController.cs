@@ -69,5 +69,62 @@ namespace EventPlus.WebAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
+        [HttpPatch("{id:Guid}")]
+        public async Task<IActionResult> Atualizar(Guid id, [FromForm] EventDTO dto)
+        {
+            try
+            {
+                string? imagemUrl = null;
+
+                if (dto.ArquivoImagem is not null)
+                {
+                    imagemUrl = await _cloudinaryServices.UploadImagem(dto.ArquivoImagem);
+                }
+                var evento = new Evento
+                {
+                    NomeEvento = dto.NomeEvento,
+                    Descricao = dto.Descricao,
+                    DataEvento = dto.DataEvento,
+                    ImagemUrl = imagemUrl,
+                    IdTipoEvento = dto.IdTipoEvento,
+                    IdInstituicao = dto.IdInstituicao,
+                };
+
+                await _event.Atualizar(id, evento);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpDelete("{id:Guid}")]
+        public async Task<IActionResult> Deletar(Guid id)
+        {
+            try
+            {
+                await _event.Deletar(id);
+                return NoContent();
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet("Listar")]
+        public async Task<IActionResult> Listar()
+        {
+            try
+            {
+                return Ok(await _event.Listar());
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }

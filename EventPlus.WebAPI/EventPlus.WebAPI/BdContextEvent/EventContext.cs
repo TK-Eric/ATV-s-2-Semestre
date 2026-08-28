@@ -50,9 +50,11 @@ public partial class EventContext : DbContext
 
             entity.Property(e => e.IdEvento).HasDefaultValueSql("(newid())");
 
-            entity.HasOne(d => d.IdInstituicaoNavigation).WithMany(p => p.Evento).HasConstraintName("FK__Evento__IdInstit__76969D2E");
+            entity.HasOne(d => d.IdInstituicaoNavigation).WithMany(p => p.Evento)
+            .HasConstraintName("FK__Evento__IdInstit__76969D2E");
 
-            entity.HasOne(d => d.IdTipoEventoNavigation).WithMany(p => p.Evento).HasConstraintName("FK__Evento__IdTipoEv__75A278F5");
+            entity.HasOne(d => d.IdTipoEventoNavigation).WithMany(p => p.Evento)
+            .HasConstraintName("FK__Evento__IdTipoEv__75A278F5");
         });
 
         modelBuilder.Entity<Instituicao>(entity =>
@@ -65,7 +67,6 @@ public partial class EventContext : DbContext
         modelBuilder.Entity<Presenca>(entity =>
         {
             entity.HasKey(e => e.IdPresenca).HasName("PK__Presenca__50FB6F5D6C56D2B6");
-
             entity.Property(e => e.IdPresenca).HasDefaultValueSql("(newid())");
 
             entity.HasOne(d => d.IdEventoNavigation).WithMany(p => p.Presenca).HasConstraintName("FK__Presenca__IdEven__7F2BE32F");
@@ -92,7 +93,6 @@ public partial class EventContext : DbContext
             entity.HasKey(e => e.IdUsuario).HasName("PK__Usuario__5B65BF97F2E28035");
 
             entity.Property(e => e.IdUsuario).HasDefaultValueSql("(newid())");
-
             entity.HasOne(d => d.IdTipoUsuarioNavigation).WithMany(p => p.Usuario).HasConstraintName("FK__Usuario__IdTipoU__628FA481");
         });
 

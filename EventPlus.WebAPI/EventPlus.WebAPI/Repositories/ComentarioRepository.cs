@@ -1,6 +1,7 @@
 ﻿using EventPlus.WebAPI.BdContextEvent;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventPlus.WebAPI.Repositories
 {
@@ -13,29 +14,66 @@ namespace EventPlus.WebAPI.Repositories
             _context = context;
         }
 
+        public async Task<Comentario> Cadastrar(Comentario c)
+        {
+            await _context.Comentario.AddAsync(c);
+            await _context.SaveChangesAsync();
+            return await _context.Comentario.FindAsync(c.IdComentario);
+        }
+
+        public async Task Deletar(Guid id)
+        {
+            var c = await _context.Comentario.FindAsync(id);
+            _context.Comentario.Remove(c);
+            await _context.SaveChangesAsync();
+        }
+
+        
+
+        public async Task<List<Comentario>> ListarPorEvento(Guid idEvento)
+        {
+            return await _context.Comentario.Where(c => c.IdEvento == idEvento && c.Exibe == true).Include(c => c.IdUsuarioNavigation).AsNoTracking().ToListAsync();
+        }
+
+       
+        public async Task EditarVisibilidade(Guid id)
+        {
+            var c = await _context.Comentario.FindAsync(id);
+
+            if (c != null)
+            {
+                c.Exibe = !c.Exibe;
+
+                _context.Comentario.Update(c);
+                await _context.SaveChangesAsync();
+            }
+
+        }
+
+       
+
+        Task IComentario.Cadastrar(Comentario comentario)
+        {
+            return Cadastrar(comentario);
+        }
+
+
         public Task<Comentario?> BuscarPorId(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task Cadastrar(Comentario comentario)
+        async Task<object?> IComentario.ListarPorUsuario(Guid idUsuario)
         {
-            comentario.DataComentario = DateTime.Now;
-            await _context.Comentario.AddAsync(comentario);
-            await _context.SaveChangesAsync();
+            return await _context.Comentario.Where(c => c.IdUsuario == idUsuario && c.Exibe == true).Include(c => c.IdEventoNavigation).AsNoTracking().ToListAsync();
         }
 
-        public Task Deletar(Guid id)
+        public async Task<List<Comentario>> Listar(Guid idEvento)
         {
-            throw new NotImplementedException();
+            return await _context.Comentario.Where(c => c.Exibe == true).Include(c => c.IdUsuarioNavigation).Include(c => c.IdEventoNavigation).AsNoTracking().ToListAsync();
         }
 
-        public Task<List<Comentario>> Listar()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Comentario>> ListarPorEvento(Guid idEvento)
+        public Task<object?> Listar()
         {
             throw new NotImplementedException();
         }

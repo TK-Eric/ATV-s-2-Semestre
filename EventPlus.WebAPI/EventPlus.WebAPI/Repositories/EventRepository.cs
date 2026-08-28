@@ -1,66 +1,73 @@
 ﻿using EventPlus.WebAPI.BdContextEvent;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventPlus.WebAPI.Repositories
 {
-    // Essa classe é quem realmente "põe a mão na massa": ela implementa
-    // a interface IEvent (o contrato que vimos antes), ou seja, aqui
-    // fica o código de verdade que mexe no banco de dados
-    public class EventRepository : IEvent
+    public class EventoRepository : IEvent
     {
-        // O EventContext é a "porta de entrada" pro banco de dados
-        // (é ele que o Entity Framework usa por trás dos panos
-        // pra fazer o SELECT, INSERT, UPDATE, DELETE, etc)
         private readonly EventContext _context;
 
-        // Recebe o EventContext prontinho via injeção de dependência
-        public EventRepository(EventContext context)
+        public EventoRepository(EventContext context)
         {
             _context = context;
         }
 
-        // Ainda não foi implementado — só existe o "molde" do método.
-        // Se alguém chamar esse método agora, vai dar erro em tempo de
-        // execução (NotImplementedException)
-        public Task Atualizar(Guid id, Evento evento)
+
+        public async Task Atualizar(Guid id, Evento eventoAtualizado)
+        {
+            var e = await _context.Evento.FindAsync(id);
+
+            if (e != null)
+            {
+                e.NomeEvento = string.IsNullOrEmpty(eventoAtualizado.NomeEvento) ? e.NomeEvento : eventoAtualizado.NomeEvento;
+                e.DataEvento = eventoAtualizado.DataEvento == DateTime.MinValue ? e.DataEvento : eventoAtualizado.DataEvento;
+                e.Descricao = string.IsNullOrEmpty(eventoAtualizado.Descricao) ? e.Descricao : eventoAtualizado.Descricao;
+                e.ImagemUrl = string.IsNullOrEmpty(eventoAtualizado.ImagemUrl) ? e.ImagemUrl : eventoAtualizado.ImagemUrl;
+                e.IdTipoEvento = eventoAtualizado.IdTipoEvento == null ? e.IdTipoEvento : eventoAtualizado.IdTipoEvento;
+                e.IdInstituicao = eventoAtualizado.IdInstituicao == null ? e.IdInstituicao : eventoAtualizado.IdInstituicao;
+
+                _context.Evento.Update(e);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public Task Atualizar(object id, Evento evento)
         {
             throw new NotImplementedException();
         }
 
-        // Também ainda não foi feito
-        public Task<Evento?> BuscarPorId(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<Evento?> BuscarPorId(Guid id) => await _context.Evento.FindAsync(id);
 
-        // Esse aqui já está pronto: cadastra um evento no banco
-        public async Task Cadastrar(Evento evento)
+        public async Task<Evento> Cadastrar(Evento e)
         {
-            // Adiciona o evento na memória do EF Core (ainda não salvou
-            // no banco, só "avisou" que isso precisa ser inserido)
-            await _context.Evento.AddAsync(evento);
-
-            // Agora sim: manda de verdade pro banco (executa o INSERT)
+            await _context.Evento.AddAsync(e);
             await _context.SaveChangesAsync();
+            return await _context.Evento.FindAsync(e.IdEvento);
         }
 
-        // Ainda não implementado
-        public Task Deletar(Guid id)
+        public async Task Deletar(Guid id)
+        {
+            var e = await _context.Evento.FindAsync(id);
+
+            if (e != null)
+            {
+                _context.Evento.Remove(e);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<Evento>> Listar()
+        {
+            return await _context.Evento.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<List<Evento>> ListarProximos()
         {
             throw new NotImplementedException();
         }
 
-        // Ainda não implementado
-        public Task<List<Evento>> Listar()
-        {
-            throw new NotImplementedException();
-        }
-
-        // Ainda não implementado
-        public Task<List<Evento>> ListarProximos()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

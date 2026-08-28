@@ -44,10 +44,50 @@ namespace EventPlus.WebAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            {
-
-            }
+        
             return Ok(dto);
         }
+
+        [HttpGet("Listar")]
+
+        public async Task <IActionResult> Listar()
+        {
+            try
+            {
+                return StatusCode(200, await _comentario.Listar());
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("Evento/{IdEvento:Guid}")]
+
+        public async Task<IActionResult> ListarPorEvento(Guid IdEvento)
+        {
+            try
+            {
+                return StatusCode(200, await _comentario.ListarPorEvento(IdEvento));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("Usuario/{IdUsuario:Guid}")]
+
+        public async Task<IActionResult> ListarPorUsuario(Guid IdUsuario)
+        {
+            try
+            {
+                return StatusCode(200, await _comentario.ListarPorUsuario(IdUsuario));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+
     }
 }
