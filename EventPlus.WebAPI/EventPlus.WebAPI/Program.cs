@@ -6,11 +6,29 @@ using EventPlus.WebAPI.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using System.Text.Json.Serialization;
 
 // Ponto de partida da aplicação: aqui é onde tudo é configurado
 // antes da API começar a rodar de verdade
 var builder = WebApplication.CreateBuilder(args);
+
+//Adicionando Swagger
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Description = "Insira um token válido para ter acesso aos endpoints da API"
+    });
+
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
+});
 
 // Registra o EventContext (a "porta" pro banco de dados) e diz pra ele
 // usar SQL Server, pegando a string de conexão do appsettings.json
@@ -85,6 +103,9 @@ builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection(
 
 // A partir daqui, monta de fato a aplicação com tudo que foi configurado
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Força todo mundo a usar HTTPS (redireciona automaticamente de HTTP pra HTTPS)
 app.UseHttpsRedirection();

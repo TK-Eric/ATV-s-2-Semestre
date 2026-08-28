@@ -113,7 +113,7 @@ namespace EventPlus.WebAPI.Controllers
             }
         }
 
-        [HttpGet("Listar")]
+        [HttpGet]
         public async Task<IActionResult> Listar()
         {
             try
