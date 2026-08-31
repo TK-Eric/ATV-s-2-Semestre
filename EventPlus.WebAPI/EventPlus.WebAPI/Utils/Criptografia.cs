@@ -1,24 +1,37 @@
-﻿namespace EventPlus.WebAPI.Utils
+﻿using BCrypt.Net;
+
+namespace EventPlus.WebAPI.Utils
 {
+
     /// <summary>
-    /// Utilitario estatico responsavel pelas operações de criptografia e hsahinga nas APIs
+    /// Utilitário estático responsável pelas operações de criptografia e hashing de senhas na API
     /// </summary>
     public static class Criptografia
     {
-        public static string GerarHash(string senha) 
+
+        public static string GerarHash(string senha)
         {
+            //retorna a senha criptografada
             return BCrypt.Net.BCrypt.HashPassword(senha);
         }
 
-        internal static bool CompararHash(string senhaInformada, string senhaBanco)
+
+        public static bool CompararHash(string senhaInformada, string senhaBanco)
         {
-            if(string.IsNullOrEmpty(senhaInformada) || string.IsNullOrEmpty(senhaBanco))
+            if (string.IsNullOrEmpty(senhaInformada) || string.IsNullOrEmpty(senhaBanco))
             {
                 return false;
             }
-            return BCrypt.Net.BCrypt.Verify(senhaInformada, senhaBanco);
 
-            throw new NotImplementedException();
+            try
+            {
+                //retorna o resultado(bool) da verificação da senha informada com a senha do banco
+                return BCrypt.Net.BCrypt.Verify(senhaInformada, senhaBanco);
+            }
+            catch (BCrypt.Net.SaltParseException)
+            {
+                return false;
+            }
         }
     }
 }

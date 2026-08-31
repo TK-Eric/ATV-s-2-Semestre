@@ -7,95 +7,70 @@ namespace EventPlus.WebAPI.Repositories
 {
     public class TipoEventoRepository : ITipoEvento
     {
-        // Contexto do EF Core que representa a conexão com o banco de dados.
-        private readonly EventContext _dbContext;
 
-        // Construtor com injeção de dependência: o EventContext é fornecido
-        // automaticamente pelo container de DI do ASP.NET Core.
-        public TipoEventoRepository(EventContext dbContext)
+        private readonly EventContext _context;
+
+        public TipoEventoRepository(EventContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
-        // Deveria atualizar um TipoUsuario existente, identificado pelo Guid (id).
-        // Ainda não implementado — lança exceção se for chamado.
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="tipoEvento"></param>
-        /// <returns></returns>
-        //public async Task Atualizar(Guid id, TipoEvento tipoEvento, CancellationToken cancellationToken)
-        //{
-        //    var tipoUsuarioBuscado = await
-        //                   _dbContext.TipoEvento.FindAsync(id);
-        //    if (tipoUsuarioBuscado != null)
-        //    {
-        //        tipoUsuarioBuscado.TituloTipoEvento =
-        //            tipoEvento.TituloTipoEvento;
-        //        _dbContext.TipoEvento.Update(tipoUsuarioBuscado);
-        //        await _dbContext.SaveChangesAsync();
-        //    }
-        //}
-
- 
-
-        public async Task Atualizar(Guid id, TipoEvento tipoEvento, CancellationToken cancellationToken)
+        // Guid id : id do objeto buscado
+        // TipoEvento novoTipo: objeto com as novas informações
+        // TipoEvento: Classe
+        // novoTipo: Objeto dessa classe
+        // TituloTipoEvento: Propriedade do objeto
+        public async Task Atualizar(Guid id, TipoEvento novoTipo)
         {
-            var tipoUsuarioBuscado = await _dbContext.TipoEvento.FindAsync(id);
+            // variável que guarda o resultado da busca(o objeto buscado que nós queremos "trocar" pelo novoTipo
+            var tipoBuscado = await _context.TipoEvento.FindAsync(id);
+            // a resposta dessa busca será null ou então o objeto encontrado
+
+            // se o tipoBuscado existir
+            if (tipoBuscado != null)
             {
-                if (tipoUsuarioBuscado != null)
-                {
-                    tipoUsuarioBuscado.TituloTipoEvento = tipoEvento.TituloTipoEvento;
-                    _dbContext.Update(tipoUsuarioBuscado);
-                    await _dbContext.SaveChangesAsync();
-                }
+                tipoBuscado.TituloTipoEvento = novoTipo.TituloTipoEvento;
+                //substituir o titulo do objeto buscado pelo titulo do novoTipo
+
+                _context.TipoEvento.Update(tipoBuscado);
+
+                await _context.SaveChangesAsync();
             }
         }
 
-        // Deveria buscar um único TipoUsuario pelo seu Id (Guid).
-        // Ainda não implementado.
-        public async Task<TipoEvento?> BuscarPorId(Guid id)
-        {
-            return await _dbContext.TipoEvento.FirstOrDefaultAsync(t => t.IdTipoEvento == id);
-        }
-
-        // Deveria cadastrar (inserir) um novo TipoUsuario no banco.
-        // Ainda não implementado.
-        public async Task Cadastrar(TipoEvento tipoEvento)
-        {
-            await _dbContext.TipoEvento.AddAsync(tipoEvento);
-
-            await _dbContext.SaveChangesAsync();
-        }
-
-        // Deveria deletar um TipoUsuario existente pelo Id.
-        // Ainda não implementado.
-        public async Task Deletar(Guid Id)
-        {
-            var tipoEventoBuscado = await
-            _dbContext.TipoEvento.FindAsync(Id);
-            if (tipoEventoBuscado != null)
-            {
-                _dbContext.TipoEvento.Remove(tipoEventoBuscado);
-                await _dbContext.SaveChangesAsync();
-            }
-        }
-
-        // Único método realmente implementado até agora:
-        // Retorna todos os registros de TipoUsuario do banco de dados.
-        // AsNoTracking() melhora a performance porque diz ao EF Core que
-        // esses dados são só leitura (não serão alterados/rastreados),
-        // ideal para consultas de listagem.
-        public async Task<List<TipoEvento>> Listar()
-        {
-            return await _dbContext.TipoEvento.AsNoTracking().ToListAsync();
-        }
-
-        Task ITipoEvento.Atualizar(Guid id, TipoEvento tipoEvento)
+        public Task Atualizar(Guid id, TipoEvento tipoEvento, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<TipoEvento?> BuscarPorId(Guid id)
+        {
+            return await _context.TipoEvento.FirstOrDefaultAsync(t => t.IdTipoEvento == id);
+        }
+
+        public async Task Cadastrar(TipoEvento tipoEvento)
+        {
+            await _context.TipoEvento.AddAsync(tipoEvento);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Deletar(Guid id)
+        {
+            var tipoBuscado = await _context.TipoEvento.FindAsync(id);
+
+            //alternativa: var tipoBuscado = await _context.TipoEvento.FirstOrDefaultAsync(t => t.IdTipoEvento == id);
+
+            if (tipoBuscado != null)
+            {
+                _context.TipoEvento.Remove(tipoBuscado);
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<TipoEvento>> Listar()
+        {
+            return await _context.TipoEvento.AsNoTracking().ToListAsync();
         }
     }
 }

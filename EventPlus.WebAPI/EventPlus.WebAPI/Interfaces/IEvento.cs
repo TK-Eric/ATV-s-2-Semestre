@@ -5,7 +5,7 @@ namespace EventPlus.WebAPI.Interfaces
     // Isso aqui é uma "interface": uma lista de promessas do que a classe
     // que for usar ela (tipo um EventRepository ou EventService) precisa
     // saber fazer. A interface não faz nada sozinha, só define "o que tem que existir"
-    public interface IEvent
+    public interface IEvento
     {
         // Promete um jeito de cadastrar (salvar) um novo evento
         Task<Evento> Cadastrar(Evento evento);

@@ -52,7 +52,7 @@ builder.Services.AddScoped<ITipoUsuario, TipoUsuarioRepository>();
 builder.Services.AddScoped<ITipoEvento, TipoEventoRepository>();
 builder.Services.AddScoped<IUsuario, UsuarioRepository>();
 builder.Services.AddScoped<IComentario, ComentarioRepository>();
-builder.Services.AddScoped<IEvent, EventoRepository>();
+builder.Services.AddScoped<IEvento, EventoRepository>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 // Configura a autenticação da API usando JWT (token de acesso)
@@ -100,6 +100,18 @@ builder.Services.AddAuthentication(options =>
 // do appsettings.json (chave de API, nome da conta, etc) e disponibiliza
 // como CloudinarySettings pra ser injetado onde precisar
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
+
+builder.Services.Configure<SightengineSettings>(builder.Configuration.GetSection("Sightengine"));
+
+builder.Services.AddHttpClient<IModerationService, SightengineModerationService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.sightengine.com/1.0/");
+});
+
+//Registra o serviço de autorização (necessário para [Authorize] funcionar
+
+//Registra o serviço de controllers(mapeia automaticamente os controllers da pasta /Controllers)
+builder.Services.AddControllers();
 
 // A partir daqui, monta de fato a aplicação com tudo que foi configurado
 var app = builder.Build();

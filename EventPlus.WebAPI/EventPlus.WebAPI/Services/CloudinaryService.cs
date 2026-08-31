@@ -9,38 +9,46 @@ namespace EventPlus.WebAPI.Services
 {
     public class CloudinaryService : ICloudinaryService
     {
+
         private readonly Cloudinary _cloudinary;
+
         public CloudinaryService(IOptions<CloudinarySettings> options)
         {
+            // Desempacota as configurações (CloudName, ApiKey e ApiSecret)
             var credenciais = options.Value;
 
+            // Account = "carteira" com as três credenciais que autenticam na conta do Cloudinary
             var account = new Account(credenciais.CloudName, credenciais.ApiKey, credenciais.ApiSecret);
 
+            // Cria o cliente de fato, já autenticado com as credenciais
             _cloudinary = new Cloudinary(account);
 
+            // Definindo que as Urls geradas venham como https
             _cloudinary.Api.Secure = true;
         }
 
         public async Task<string> UploadImagem(IFormFile arquivo)
         {
-            //abre um fluxo de leitura do arquivo 
-            //using: garnte que o stream sera fechado apos o uso
+            // Abre um fluxo de leitura do arquivo
+            // using: garante que o stream será fechado após o uso(libera a memória mesmo se der erro)
             using var stream = arquivo.OpenReadStream();
 
+            // Monta os parâmetros do upload
             var uploadParams = new ImageUploadParams
             {
-                //o arquivo em sim, o nome originl mais o fluxo de bytes a enviar
+                // O arquivo em si: nome original + o fluxo de bytes a enviar
                 File = new FileDescription(arquivo.FileName, stream),
-                //pasta de destino dentro do cloudinary
+
+                // Pasta de destino dentro do Cloudinary
                 Folder = "eventplus/eventos"
             };
-            //envia a imagem para o cloudnary e aguarda a resposta com os dados do upload
+
+            // Envia a imagem para o Cloudinary e aguarda a resposta com os dados do upload
             var resultado = await _cloudinary.UploadAsync(uploadParams);
 
-            //retorna so o que interessa para a aplicação(URL segura da imagem)
-            //que depois sera salva no campo imagem/URL
+            // Retorna só o que interessa para a aplicação (URL segura da imagem)
+            // Que depois será salva no campo ImagemUrl(em Eventos)
             return resultado.SecureUrl.AbsoluteUri;
         }
     }
 }
-    

@@ -2,6 +2,7 @@
 {
     public interface IModerationService
     {
-        Task<bool> ModeratorTexto(string texto);
+        
+        Task<bool> ModerarTexto(string texto);
     }
 }

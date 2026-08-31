@@ -7,8 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventPlus.WebAPI.Models;
 
-[Index("Senha", Name = "UQ__Usuario__7ABB9731CC47FAF7", IsUnique = true)]
-[Index("Email", Name = "UQ__Usuario__A9D10534BDBE6ABA", IsUnique = true)]
+[Index("Email", Name = "UQ__Usuario__A9D1053408B16312", IsUnique = true)]
 public partial class Usuario
 {
     [Key]
@@ -18,13 +17,13 @@ public partial class Usuario
     [Unicode(false)]
     public string Nome { get; set; } = null!;
 
-    [StringLength(100)]
+    [StringLength(256)]
     [Unicode(false)]
     public string Email { get; set; } = null!;
 
-    [StringLength(100)]
+    [StringLength(60)]
     [Unicode(false)]
-    [JsonIgnore]
+    [JsonIgnore]//nunca serializa a senha na reposta
     public string Senha { get; set; } = null!;
 
     public Guid? IdTipoUsuario { get; set; }

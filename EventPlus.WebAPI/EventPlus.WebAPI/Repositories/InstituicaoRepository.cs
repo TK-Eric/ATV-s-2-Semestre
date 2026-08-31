@@ -14,31 +14,16 @@ namespace EventPlus.WebAPI.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task Atualizar(Guid id, Instituicao instituicao)
+        public async Task<List<Instituicao>> Listar()
         {
-            var instituicaoBuscada = await _dbContext.Instituicao.FindAsync(id);
-
-            if (instituicaoBuscada != null)
-            {
-                instituicaoBuscada.IdInstituicao = instituicao.IdInstituicao;
-                _dbContext.Instituicao.Update(instituicaoBuscada);
-                await _dbContext.SaveChangesAsync();
-            }
-        }
-
-        public Task Atualizar(Guid id, Instituicao instituicao, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Atualizar(Guid id, IInstituicao instituicao)
-        {
-            throw new NotImplementedException();
+            return await _dbContext.Instituicao.AsNoTracking().ToListAsync();
         }
 
         public async Task<Instituicao?> BuscarPorId(Guid id)
         {
-            return await _dbContext.Instituicao.FirstOrDefaultAsync(i => i.IdInstituicao == id);
+            return await _dbContext.Instituicao
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.IdInstituicao == id);
         }
 
         public async Task Cadastrar(Instituicao instituicao)
@@ -47,39 +32,27 @@ namespace EventPlus.WebAPI.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task Atualizar(Guid id, Instituicao instituicao)
+        {
+            var instituicaoBuscada = await _dbContext.Instituicao.FindAsync(id);
+
+            if (instituicaoBuscada != null)
+            {
+                // Copia automaticamente todas as propriedades alteradas sem sobrescrever o ID
+                _dbContext.Entry(instituicaoBuscada).CurrentValues.SetValues(instituicao);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
         public async Task Deletar(Guid id)
         {
             var instituicaoBuscada = await _dbContext.Instituicao.FindAsync(id);
+
             if (instituicaoBuscada != null)
             {
                 _dbContext.Instituicao.Remove(instituicaoBuscada);
                 await _dbContext.SaveChangesAsync();
             }
-        }
-
-        public async Task<List<Instituicao>> Listar()
-        {
-            return await _dbContext.Instituicao.AsNoTracking().ToListAsync();
-        }
-
-        public Task<List<Instituicao>> ListarPorInscrito(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Instituicao>> ListarPorInstituicao(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TipoEvento?> ListarProximosEventos()
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<List<Instituicao>> IInstituicao.BuscarPorId(Guid id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,7 +1,11 @@
 ﻿using EventPlus.WebAPI.DTO;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
+using EventPlus.WebAPI.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EventPlus.WebAPI.Controllers
 {
@@ -16,20 +20,11 @@ namespace EventPlus.WebAPI.Controllers
             _usuario = usuario;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Listar()
-        {
-            try
-            {
-                var listaUsuarios = await _usuario.Listar();
-                return Ok(listaUsuarios);
-            }
-            catch (Exception erro)
-            {
-                return BadRequest(erro.Message);
-            }
-        }
-
+        /// <summary>
+        /// Cadastra um usuário
+        /// </summary>
+        /// <param name="dto">Objeto a ser cadastrado</param>
+        /// <returns>Status code e o objeto cadastrado</returns>
         [HttpPost]
         public async Task<IActionResult> Cadastrar([FromBody] UsuarioDTO dto)
         {
@@ -39,7 +34,7 @@ namespace EventPlus.WebAPI.Controllers
                 {
                     Nome = dto.Nome,
                     Email = dto.Email,
-                    Senha = dto.Senha,
+                    Senha = dto.Senha,//obs: a criptografia ocorre dentro do repositório
                     IdTipoUsuario = dto.IdTipoUsuario
                 };
 
@@ -47,28 +42,48 @@ namespace EventPlus.WebAPI.Controllers
 
                 return StatusCode(201, usuario);
             }
-            catch (Exception erro)
+            catch (Exception e)
             {
-                return BadRequest(erro.Message);
+                return BadRequest(e.Message);
             }
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, [FromBody] UsuarioDTO dto)
+        /// <summary>
+        /// Lista todos os usuários
+        /// </summary>
+        /// <returns>Status code e a lista de usuários</returns>
+        [HttpGet]
+        public async Task<IActionResult> Listar()
         {
             try
             {
-                var usuario = new Usuario
+                var usuarios = await _usuario.Listar();
+                return Ok(usuarios);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Busca um usuário pelo seu id
+        /// </summary>
+        /// <param name="id">Id do usuário a ser buscado</param>
+        /// <returns>Status Code 200 com objeto ou 400</returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> BuscarPorId(Guid id)
+        {
+            try
+            {
+                var usuarioBuscado = await _usuario.BuscarPorId(id);
+
+                if (usuarioBuscado == null)
                 {
-                    Nome = dto.Nome,
-                    Email = dto.Email,
-                    Senha = dto.Senha,
-                    IdTipoUsuario = dto.IdTipoUsuario
-                };
+                    return NotFound("Tipo de usuário não encontrado.");
+                }
 
-                await _usuario.Atualizar(id, usuario);
-
-                return Ok(usuario);
+                return Ok(usuarioBuscado);
             }
             catch (Exception erro)
             {
@@ -76,7 +91,12 @@ namespace EventPlus.WebAPI.Controllers
             }
         }
 
-        [HttpDelete("{id:guid}")]
+        /// <summary>
+        /// Exclui um usuário pelo seu id
+        /// </summary>
+        /// <param name="id">Id do usuário a ser excluido</param>
+        /// <returns>Status Code 204 ou 400</returns>        
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Deletar(Guid id)
         {
             try
@@ -84,11 +104,34 @@ namespace EventPlus.WebAPI.Controllers
                 await _usuario.Deletar(id);
 
                 return NoContent();
+
             }
-            catch (Exception erro)
+            catch (Exception e)
             {
-                return BadRequest(erro.Message);
+                return BadRequest(e.Message);
             }
+        }
+
+        /// <summary>
+        /// Atualiza um usuário
+        /// </summary>
+        /// <param name="id">Id do usuário a ser atualizado</param>
+        /// <param name="dto">Objeto com as novas informações</param>
+        /// <returns>Status Code NoContent</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(Guid id, [FromBody] UsuarioDTO dto)
+        {
+            var usuario = new Usuario
+            {
+                Nome = dto.Nome,
+                Email = dto.Email,
+                Senha = dto.Senha,
+                IdTipoUsuario = dto.IdTipoUsuario
+            };
+
+            await _usuario.Atualizar(id, usuario);
+
+            return NoContent();
         }
     }
 }

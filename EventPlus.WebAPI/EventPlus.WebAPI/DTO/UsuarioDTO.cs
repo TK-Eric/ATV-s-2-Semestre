@@ -4,23 +4,18 @@ namespace EventPlus.WebAPI.DTO
 {
     public class UsuarioDTO
     {
-        [Required(ErrorMessage ="Campo Obrigatorio")]
-        [StringLength(100, ErrorMessage ="o Nome deve ter no maximo 100 caracteres")]
+        [Required(ErrorMessage = "Campo obrigatório!")]
+        [StringLength(100, ErrorMessage = "O nome deve ter no máximo 100 caracteres!")]
         public string Nome { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Campo Obrigatorio")]
-        [EmailAddress(ErrorMessage ="informe um email valido!")]
 
+        [Required(ErrorMessage = "Campo obrigatório!")]
+        [EmailAddress(ErrorMessage = "Informe um e-mail válido!")]
         public string Email { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Campo Obrigatorio")]
-        [StringLength(60, MinimumLength = 8,  ErrorMessage = "Senha errada")]
 
-
+        [Required(ErrorMessage = "Campo obrigatório!")]
+        [StringLength(60, MinimumLength = 8, ErrorMessage = "A senha deve ter entre 8 e 60 caracteres")]
         public string Senha { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Campo Obrigatorio")]
-
 
         public Guid? IdTipoUsuario { get; set; }
-
-
     }
 }

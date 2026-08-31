@@ -1,5 +1,4 @@
-﻿using EventPlus.WebAPI.Utils;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace EventPlus.WebAPI.DTO
 {
@@ -11,9 +10,7 @@ namespace EventPlus.WebAPI.DTO
 
         [Required(ErrorMessage = "O identificador do evento é obrigatório.")]
         public Guid IdEvento { get; set; }
-        public Guid? IdUsuario { get; internal set; }
 
-        public DateTime DataComentario { get; set; } = DateTime.Now;
-    
-}
+        public Guid? IdUsuario { get; set; }
+    }
 }

@@ -30,70 +30,79 @@ public partial class EventContext : DbContext
 
     public virtual DbSet<Usuario> Usuario { get; set; }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Comentario>(entity =>
         {
-            entity.HasKey(e => e.IdComentario).HasName("PK__Comentar__DDBEFBF9F66457E0");
+            entity.HasKey(e => e.IdComentario).HasName("PK__Comentar__DDBEFBF9A275BBD1");
 
             entity.Property(e => e.IdComentario).HasDefaultValueSql("(newid())");
 
-            entity.HasOne(d => d.IdEventoNavigation).WithMany(p => p.Comentario).HasConstraintName("FK__Comentari__IdEve__7B5B524B");
+            entity.HasOne(d => d.IdEventoNavigation).WithMany(p => p.Comentario).HasConstraintName("FK__Comentari__IdEve__6383C8BA");
 
-            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Comentario).HasConstraintName("FK__Comentari__IdUsu__7A672E12");
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Comentario)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK__Comentari__IdUsu__6477ECF3");
         });
 
         modelBuilder.Entity<Evento>(entity =>
         {
-            entity.HasKey(e => e.IdEvento).HasName("PK__Evento__034EFC04EF82FB62");
+            entity.HasKey(e => e.IdEvento).HasName("PK__Evento__034EFC046319B558");
 
             entity.Property(e => e.IdEvento).HasDefaultValueSql("(newid())");
 
             entity.HasOne(d => d.IdInstituicaoNavigation).WithMany(p => p.Evento)
-            .HasConstraintName("FK__Evento__IdInstit__76969D2E");
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK__Evento__IdInstit__5AEE82B9");
 
             entity.HasOne(d => d.IdTipoEventoNavigation).WithMany(p => p.Evento)
-            .HasConstraintName("FK__Evento__IdTipoEv__75A278F5");
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK__Evento__IdTipoEv__59FA5E80");
         });
 
         modelBuilder.Entity<Instituicao>(entity =>
         {
-            entity.HasKey(e => e.IdInstituicao).HasName("PK__institui__B771C0D826F406A5");
+            entity.HasKey(e => e.IdInstituicao).HasName("PK__Institui__B771C0D8FFC7983C");
 
             entity.Property(e => e.IdInstituicao).HasDefaultValueSql("(newid())");
         });
 
         modelBuilder.Entity<Presenca>(entity =>
         {
-            entity.HasKey(e => e.IdPresenca).HasName("PK__Presenca__50FB6F5D6C56D2B6");
+            entity.HasKey(e => e.IdPresenca).HasName("PK__Presenca__50FB6F5D7A12364E");
+
             entity.Property(e => e.IdPresenca).HasDefaultValueSql("(newid())");
 
-            entity.HasOne(d => d.IdEventoNavigation).WithMany(p => p.Presenca).HasConstraintName("FK__Presenca__IdEven__7F2BE32F");
+            entity.HasOne(d => d.IdEventoNavigation).WithMany(p => p.Presenca).HasConstraintName("FK__Presenca__IdEven__5EBF139D");
 
-            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Presenca).HasConstraintName("FK__Presenca__IdUsua__00200768");
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Presenca)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK__Presenca__IdUsua__5FB337D6");
         });
 
         modelBuilder.Entity<TipoEvento>(entity =>
         {
-            entity.HasKey(e => e.IdTipoEvento).HasName("PK__TipoEven__CDB3A3BE8330AA02");
+            entity.HasKey(e => e.IdTipoEvento).HasName("PK__TipoEven__CDB3A3BEC16CE581");
 
             entity.Property(e => e.IdTipoEvento).HasDefaultValueSql("(newid())");
         });
 
         modelBuilder.Entity<TipoUsuario>(entity =>
         {
-            entity.HasKey(e => e.IdTipoUsuario).HasName("PK__TipoUsua__CA04062B569F02C3");
+            entity.HasKey(e => e.IdTipoUsuario).HasName("PK__TipoUsua__CA04062BC8D2CF9F");
 
             entity.Property(e => e.IdTipoUsuario).HasDefaultValueSql("(newid())");
         });
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.IdUsuario).HasName("PK__Usuario__5B65BF97F2E28035");
+            entity.HasKey(e => e.IdUsuario).HasName("PK__Usuario__5B65BF97A4AB46FC");
 
             entity.Property(e => e.IdUsuario).HasDefaultValueSql("(newid())");
-            entity.HasOne(d => d.IdTipoUsuarioNavigation).WithMany(p => p.Usuario).HasConstraintName("FK__Usuario__IdTipoU__628FA481");
+
+            entity.HasOne(d => d.IdTipoUsuarioNavigation).WithMany(p => p.Usuario)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK__Usuario__IdTipoU__5629CD9C");
         });
 
         OnModelCreatingPartial(modelBuilder);

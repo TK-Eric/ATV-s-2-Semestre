@@ -3,42 +3,51 @@ using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata.Ecma335;
 
 namespace EventPlus.WebAPI.Controllers
 {
-
-    [Route("api/[controller]")]
-
-
+    [Route("api/[controller]")] //htttp://localhost:5170/api/TipoEvento
     [ApiController]
     public class TipoEventoController : ControllerBase
     {
         private readonly ITipoEvento _tipoEvento;
 
-
         public TipoEventoController(ITipoEvento tipoEvento)
         {
             _tipoEvento = tipoEvento;
         }
-        [HttpGet("{id:guid}")]
 
-        public async Task<IActionResult> BuscarPorId(Guid id)
+        /// <summary>
+        /// Cadastra uma categoria de evento
+        /// </summary>
+        /// <param name="dto">objeto que será cadastrado</param>
+        /// <returns>Status code 201 e o objeto cadastrado</returns>
+        [HttpPost]
+        public async Task<IActionResult> Cadastrar([FromBody] TipoEventoDTO dto)
         {
-            var tipoEventoBuscado = await _tipoEvento.BuscarPorId(id);
+            try
+            {
+                var tipoEvento = new TipoEvento
+                {
+                    TituloTipoEvento = dto.TituloTipoEvento
+                };
 
-            if (tipoEventoBuscado == null)
-                return NotFound("Tipo Usuario nao encontrado.");
+                await _tipoEvento.Cadastrar(tipoEvento);
 
-            return Ok(tipoEventoBuscado);
+                return StatusCode(201, tipoEvento);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-
+        /// <summary>
+        /// Lista todos as categorias de eventos
+        /// </summary>
+        /// <returns>Lista com as categorias de eventos</returns>
         [HttpGet]
-        //<summary>
-        //Lista todos os perfiz e usuario
-        //</summary>
-
         public async Task<IActionResult> Listar()
         {
             try
@@ -48,50 +57,82 @@ namespace EventPlus.WebAPI.Controllers
                 return Ok(tipos);
 
             }
-            catch (Exception erro)
+            catch (Exception e)
             {
-                return BadRequest(erro.Message);
+                return BadRequest(e.Message);
             }
         }
+
         /// <summary>
-        /// 
+        /// Busca uma categoria de evento pelo seu id
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        [HttpPost]
-
-        public async Task<IActionResult> Cadastrar([FromBody] TipoEventoDTO dto)
+        /// <param name="id">Id da categoria a ser buscado</param>
+        /// <returns>Status code 200 e o objeto buscado</returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> BuscarPorId(Guid id)
         {
-
-            var tipoEvento = new TipoEvento
+            try
             {
-                TituloTipoEvento = dto.TituloTipoEvento
-            };
+                var tipo = await _tipoEvento.BuscarPorId(id);
 
-            await _tipoEvento.Cadastrar(tipoEvento);
+                if (tipo == null)
+                {
+                    return NotFound();
+                }
 
-            return StatusCode(201, tipoEvento);
+                return Ok(tipo);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Atualizar(Guid id,
-            [FromBody] TipoEventoDTO dto)
+        /// <summary>
+        /// Atualiza uma categoria de evento
+        /// </summary>
+        /// <param name="id">Id do evento a ser alterado</param>
+        /// <param name="dto">Objeto com as novas informações</param>
+        /// <returns>Status code 204 e o objeto atualizado</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(Guid id, [FromBody] TipoEventoDTO dto)
         {
-            var tipoEvento = new TipoEvento
+            try
             {
-                TituloTipoEvento = dto.TituloTipoEvento
-            };
+                var tipoEvento = new TipoEvento
+                {
+                    TituloTipoEvento = dto.TituloTipoEvento
+                };
 
-            await _tipoEvento.Atualizar(id, tipoEvento);
+                await _tipoEvento.Atualizar(id, tipoEvento);
 
-            return Ok(tipoEvento);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        [HttpDelete("{id:guid}")]
+        /// <summary>
+        /// Remove uma categoria de evento
+        /// </summary>
+        /// <param name="id">Id do objeto a ser excluído</param>
+        /// <returns>Status Code NoContent se der certo e 400 caso haja exceção</returns>
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Deletar(Guid id)
         {
-            await _tipoEvento.Deletar(id);
-            return NoContent();
+            try
+            {
+                await _tipoEvento.Deletar(id);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
     }

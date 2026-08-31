@@ -1,4 +1,6 @@
-﻿namespace EventPlus.WebAPI.Utils
+﻿using EventPlus.WebAPI.Interfaces;
+
+namespace EventPlus.WebAPI.Services
 {
     public class SightengineSettings
     {

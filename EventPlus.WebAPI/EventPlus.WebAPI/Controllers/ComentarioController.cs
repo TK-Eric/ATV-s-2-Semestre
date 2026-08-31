@@ -1,18 +1,21 @@
 ﻿using EventPlus.WebAPI.DTO;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
+using EventPlus.WebAPI.Repositories;
+using EventPlus.WebAPI.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventPlus.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    // Isso aqui avisa que essa classe é uma API (ativa umas verificações
-    // automáticas, tipo checar se os dados enviados estão certos)
     [ApiController]
     public class ComentarioController : ControllerBase
     {
         private readonly IComentario _comentario;
         private readonly IModerationService _moderationService;
+
 
         public ComentarioController(IComentario comentario, IModerationService moderationService)
         {
@@ -20,16 +23,17 @@ namespace EventPlus.WebAPI.Controllers
             _moderationService = moderationService;
         }
 
-        [HttpPost]
 
+        [HttpPost]
         public async Task<IActionResult> Cadastrar([FromBody] ComentarioDTO dto)
         {
             try
             {
-                bool reprovado = await _moderationService.ModeratorTexto(dto.Descricao);
+                bool reprovado = await _moderationService.ModerarTexto(dto.Descricao);
 
                 var comentario = new Comentario
                 {
+                    DataComentario = DateTime.Now,
                     Descricao = dto.Descricao,
                     IdEvento = dto.IdEvento,
                     IdUsuario = dto.IdUsuario,
@@ -40,54 +44,83 @@ namespace EventPlus.WebAPI.Controllers
 
                 return StatusCode(201, comentario);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new
+                {
+                    e.Message,
+                    inner = e.InnerException?.Message
+
+
+                });
+
             }
-        
-            return Ok(dto);
+
         }
-
-        [HttpGet("Listar")]
-
-        public async Task <IActionResult> Listar()
+        [HttpPut("{id:Guid}")] 
+        public async Task<IActionResult> Atualizar(Guid id, [FromForm] ComentarioDTO dto)
         {
             try
             {
-                return StatusCode(200, await _comentario.Listar());
+                var evento = new Comentario
+                {
+                    Descricao = dto.Descricao,
+                    IdEvento = dto.IdEvento,
+                    IdUsuario = dto.IdUsuario,
+                };
+
+                await _comentario.Atualizar(id, evento);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        } 
+
+        [HttpGet]
+        public async Task<IActionResult> Listar()
+        {
+            try
+            {
+                return Ok(await _comentario.Listar());
             }
             catch
             {
                 return BadRequest();
             }
         }
-        [HttpGet("Evento/{IdEvento:Guid}")]
 
-        public async Task<IActionResult> ListarPorEvento(Guid IdEvento)
+        [HttpDelete("{id:Guid}")]
+        public async Task<IActionResult> Deletar(Guid id)
         {
             try
             {
-                return StatusCode(200, await _comentario.ListarPorEvento(IdEvento));
+                await _comentario.Deletar(id);
+                return NoContent();
             }
             catch
             {
-                return BadRequest();
+                return NotFound();
             }
         }
-        [HttpGet("Usuario/{IdUsuario:Guid}")]
-
-        public async Task<IActionResult> ListarPorUsuario(Guid IdUsuario)
-        {
-            try
-            {
-                return StatusCode(200, await _comentario.ListarPorUsuario(IdUsuario));
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-
     }
 }
+
+//CRUDS ?
+
+// Tenho todos os controlers para todos os métodos de cada repositório
+
+// Travas as rotas com Authorize
+
+
+
+//Para quem já testou todas as rotas, iniciar o processo abaixo:
+
+// Iniciar o projeto 2 - Backend
+// 1) Diagrama do banco
+// 2) Diagrama de classe 
+// 3) Validar c/ professores os diagramas
+// 4) Criar o banco
+// 5) Desenvolver a API

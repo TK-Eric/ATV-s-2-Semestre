@@ -13,11 +13,11 @@ namespace EventPlus.WebAPI.Controllers
     public class EventController : ControllerBase
     {
         // Essas duas variáveis guardam "ferramentas" que a classe vai usar:
-        private readonly IEvent _event; // pra salvar/mexer com eventos
+        private readonly IEvento _event; // pra salvar/mexer com eventos
         private readonly ICloudinaryService _cloudinaryServices; // pra subir imagem pra internet (Cloudinary)
 
         // Aqui o C# entrega essas ferramentas prontas quando o controller é criado
-        public EventController(IEvent evento, ICloudinaryService cloudinaryService)
+        public EventController(IEvento evento, ICloudinaryService cloudinaryService)
         {
             _event = evento;
             _cloudinaryServices = cloudinaryService;
@@ -27,7 +27,7 @@ namespace EventPlus.WebAPI.Controllers
         [HttpPost]
         // Avisa que vai receber um formulário (texto + arquivo juntos)
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Cadastrar([FromForm] EventDTO dto)
+        public async Task<IActionResult> Cadastrar([FromForm] EventoDTO dto)
         {
             // O "dto" já chega preenchido com os dados que o usuário mandou no formulário
 
@@ -70,7 +70,7 @@ namespace EventPlus.WebAPI.Controllers
             }
         }
         [HttpPatch("{id:Guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, [FromForm] EventDTO dto)
+        public async Task<IActionResult> Atualizar(Guid id, [FromForm] EventoDTO dto)
         {
             try
             {
