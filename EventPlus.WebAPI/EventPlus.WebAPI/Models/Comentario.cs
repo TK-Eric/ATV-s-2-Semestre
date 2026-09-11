@@ -32,3 +32,4 @@ public partial class Comentario
     [InverseProperty("Comentario")]
     public virtual Usuario? IdUsuarioNavigation { get; set; }
 }
+    

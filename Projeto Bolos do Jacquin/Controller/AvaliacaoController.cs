@@ -27,20 +27,19 @@ namespace Projeto_Bolos_do_Jacquin.Controller
         {
             try
             {
-                bool reprovado = await _moderationService.ModerarTexto(dto.Descricao);
+                bool reprovado = await _moderationService.ModerarTexto(dto.Comentario);
 
-                var comentario = new Comentario
+                var avaliacao = new Avaliacoes
                 {
-                    DataComentario = DateTime.Now,
-                    Descricao = dto.Descricao,
-                    IdEvento = dto.IdEvento,
-                    IdUsuario = dto.IdUsuario,
+                    DataCriacao = DateTime.Now,
+                    Comentario = dto.Comentario,
+                    IdProdutos = dto.IdProdutos,
                     Exibe = !reprovado
                 };
 
-                await _avaliacao.Cadastrar(comentario);
+                await _avaliacao.Cadastrar(avaliacao);
 
-                return StatusCode(201, comentario);
+                return StatusCode(201, avaliacao);
             }
             catch (Exception e)
             {
@@ -61,14 +60,13 @@ namespace Projeto_Bolos_do_Jacquin.Controller
         {
             try
             {
-                var evento = new Comentario
+                var evento = new Avaliacoes
                 {
-                    Descricao = dto.Descricao,
-                    IdEvento = dto.IdEvento,
-                    IdUsuario = dto.IdUsuario,
+                    Comentario = dto.Comentario,
+                    IdProdutos = dto.IdProdutos,
                 };
 
-                await _comentario.Atualizar(id, evento);
+                await _avaliacao.Atualizar(id, evento);
 
                 return NoContent();
             }

@@ -9,7 +9,7 @@ namespace Projeto_Bolos_do_Jacquin.Models;
 public partial class Produtos
 {
     [Key]
-    public int IdProdutos { get; set; }
+    public Guid IdProdutos { get; set; }
 
     [StringLength(150)]
     [Unicode(false)]
@@ -25,8 +25,11 @@ public partial class Produtos
     [StringLength(500)]
     [Unicode(false)]
     public string? Descricao { get; set; }
+    public string? DescricaoLonga { get; set; }
+    public string? DescricaoCurta { get; set; }
 
     public bool? Disponibilidade { get; set; }
+    public bool? Situacao { get; set; }
 
     public int CategoriaId { get; set; }
 

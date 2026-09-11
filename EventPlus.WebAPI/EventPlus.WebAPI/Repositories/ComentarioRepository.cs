@@ -19,6 +19,7 @@ namespace EventPlus.WebAPI.Repositories
         {
             comentario.DataComentario = DateTime.Now;
             await _context.Comentario.AddAsync(comentario);
+            //esse metodo adiciona ele no banco, manipular o banco de dados
             await _context.SaveChangesAsync();
         }
 

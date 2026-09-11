@@ -13,8 +13,8 @@ namespace Projeto_Bolos_do_Jacquin.DTO
 
         public string DescricaoLonga { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "A data do evento é obrigatória.")]
-        public DateTime DataEvento { get; set; }
+        [Required(ErrorMessage = "A data do produto é obrigatória.")]
+        public DateTime DataProduto { get; set; }
 
         public string? EndereçoImagem { get; set; }
 

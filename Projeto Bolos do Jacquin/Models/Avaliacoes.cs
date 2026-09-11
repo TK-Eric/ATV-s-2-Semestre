@@ -9,7 +9,7 @@ namespace Projeto_Bolos_do_Jacquin.Models;
 public partial class Avaliacoes
 {
     [Key]
-    public int IdAvaliacoes { get; set; }
+    public Guid IdAvaliacoes { get; set; }
 
     public int Nota { get; set; }
 
@@ -18,17 +18,18 @@ public partial class Avaliacoes
     public string? Comentario { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime? DataCriacao { get; set; }
+    public DateTime DataCriacao { get; set; }
 
-    public int UsuarioId { get; set; }
+    public Guid IdUsuarios { get; set; }
 
-    public int ProdutoId { get; set; }
+    public Guid? IdProdutos { get; set; }
 
     [ForeignKey("ProdutoId")]
     [InverseProperty("Avaliacoes")]
-    public virtual Produtos Produto { get; set; } = null!;
+    public virtual Produtos? Produto { get; set; } = null!;
 
     [ForeignKey("UsuarioId")]
     [InverseProperty("Avaliacoes")]
     public virtual Usuarios Usuario { get; set; } = null!;
+    public bool Exibe { get; set; }
 }

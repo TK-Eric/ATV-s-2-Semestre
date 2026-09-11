@@ -9,5 +9,6 @@ namespace Projeto_Bolos_do_Jacquin.Interfaces
         Task<List<Categorias>> Listar();
         Task<Categorias?> BuscarPorId(Guid id);
         Task Atualizar(Guid id, Categorias categoria);
+        
     }
 }
