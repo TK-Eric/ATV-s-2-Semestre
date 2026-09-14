@@ -6,10 +6,10 @@ namespace Projeto_Bolos_do_Jacquin.Interfaces
     {
         Task Cadastrar(Usuarios usuario);
         Task<List<Usuarios>> Listar();
-        Task Deletar(Guid Id);
+        Task<bool> Deletar(int id);
         Task<Usuarios?> BuscarPorEmailESenha(string email, string senha);
-
-        Task<Usuarios?> BuscarPorId(Guid id);
-        Task Atualizar(Guid id, Usuarios usuario);
+        Task<Usuarios?> BuscarPorId(int id);
+        Task<bool> EmailExiste(string email, int? idIgnorar = null);
+        Task Atualizar(int id, Usuarios usuario);
     }
 }

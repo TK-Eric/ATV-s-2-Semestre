@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Projeto_Bolos_do_Jacquin.Constants;
 using Projeto_Bolos_do_Jacquin.DTO;
 using Projeto_Bolos_do_Jacquin.Interfaces;
 using Projeto_Bolos_do_Jacquin.Models;
@@ -16,80 +18,252 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             _produto = produto;
         }
 
+        /// <summary>
+        /// Cadastra um novo produto.
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Cadastrar([FromForm] ProdutoDTO dto)
+        [Authorize(Roles = Perfil.Administrador)]
+        public async Task<IActionResult> Cadastrar([FromBody] ProdutoDTO dto)
         {
-            try
+            if (dto == null)
             {
-
-                var produto = new Produtos
+                return BadRequest(new
                 {
-                    Nome = dto.Nome,
-                    DescricaoCurta = dto.DescricaoCurta,
-                    DescricaoLonga = dto.DescricaoLonga,
-                    Situacao = dto.Situacao,
-                    Disponibilidade = dto.Disponibilidade,
-                };
-
-                await _produto.Cadastrar(produto);
-
-                return StatusCode(201, produto);
+                    mensagem = "Os dados do produto são obrigatórios."
+                });
             }
-            catch (Exception e)
+
+            if (string.IsNullOrWhiteSpace(dto.Nome))
             {
-                return BadRequest(new { e.Message, inner = e.InnerException?.Message });
+                return BadRequest(new
+                {
+                    mensagem = "O nome do produto é obrigatório."
+                });
             }
+
+            if (dto.Preco <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O preço do produto deve ser maior que zero."
+                });
+            }
+
+            if (dto.IdCategoria <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "A categoria do produto é obrigatória."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.EnderecoImagem))
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O endereço da imagem é obrigatório."
+                });
+            }
+
+            var produto = new Produtos
+            {
+                Nome = dto.Nome.Trim(),
+                Preco = dto.Preco,
+                EnderecoImagem = dto.EnderecoImagem.Trim(),
+                IdCategoria = dto.IdCategoria,
+                DescricaoCurta = dto.DescricaoCurta?.Trim(),
+                DescricaoLonga = dto.DescricaoLonga?.Trim(),
+                Disponibilidade = dto.Disponibilidade,
+                Situacao = dto.Situacao
+            };
+
+            await _produto.Cadastrar(produto);
+
+            return StatusCode(201, produto);
         }
 
-        [HttpPut("{id:Guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, [FromForm] ProdutoDTO dto)
+        /// <summary>
+        /// Atualiza um produto existente.
+        /// </summary>
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = Perfil.Administrador)]
+        public async Task<IActionResult> Atualizar(
+            int id,
+            [FromBody] ProdutoDTO dto)
         {
-            try
+            if (dto == null)
             {
-                var produto = new Produtos
+                return BadRequest(new
                 {
-                    Nome = dto.Nome,
-                    DescricaoCurta = dto.DescricaoCurta,
-                    DescricaoLonga = dto.DescricaoLonga,
-                    Situacao = dto.Situacao,
-                    Disponibilidade = dto.Disponibilidade,
-                };
-
-                await _produto.Atualizar(id, produto);
-
-                return NoContent();
+                    mensagem = "Os dados do produto são obrigatórios."
+                });
             }
-            catch (Exception e)
+
+            if (id <= 0)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new
+                {
+                    mensagem = "O identificador do produto é inválido."
+                });
             }
+
+            if (string.IsNullOrWhiteSpace(dto.Nome))
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O nome do produto é obrigatório."
+                });
+            }
+
+            if (dto.Preco <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O preço do produto deve ser maior que zero."
+                });
+            }
+
+            if (dto.IdCategoria <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "A categoria do produto é obrigatória."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.EnderecoImagem))
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O endereço da imagem é obrigatório."
+                });
+            }
+
+            var produto = new Produtos
+            {
+                Nome = dto.Nome.Trim(),
+                Preco = dto.Preco,
+                EnderecoImagem = dto.EnderecoImagem.Trim(),
+                IdCategoria = dto.IdCategoria,
+                DescricaoCurta = dto.DescricaoCurta?.Trim(),
+                DescricaoLonga = dto.DescricaoLonga?.Trim(),
+                Disponibilidade = dto.Disponibilidade,
+                Situacao = dto.Situacao
+            };
+
+            await _produto.Atualizar(id, produto);
+
+            return NoContent();
         }
 
+        /// <summary>
+        /// Lista os produtos do catálogo.
+        /// Permite pesquisa por nome, categoria e faixa de preço.
+        /// </summary>
         [HttpGet]
-        public async Task<IActionResult> Listar()
+        public async Task<IActionResult> Listar(
+            [FromQuery] string? nome,
+            [FromQuery] int? categoria,
+            [FromQuery] decimal? precoMin,
+            [FromQuery] decimal? precoMax)
         {
-            try
+            if (precoMin.HasValue && precoMin < 0)
             {
-                return Ok(await _produto.Listar());
+                return BadRequest(new
+                {
+                    mensagem = "O preço mínimo não pode ser negativo."
+                });
             }
-            catch
+
+            if (precoMax.HasValue && precoMax < 0)
             {
-                return BadRequest();
+                return BadRequest(new
+                {
+                    mensagem = "O preço máximo não pode ser negativo."
+                });
             }
+
+            if (precoMin.HasValue &&
+                precoMax.HasValue &&
+                precoMin > precoMax)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O preço mínimo não pode ser maior que o preço máximo."
+                });
+            }
+
+            if (categoria.HasValue && categoria <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "A categoria informada é inválida."
+                });
+            }
+
+            var produtos = await _produto.Listar(
+                nome,
+                categoria,
+                precoMin,
+                precoMax
+            );
+
+            return Ok(produtos);
         }
 
-        [HttpDelete("{id:Guid}")]
-        public async Task<IActionResult> Deletar(Guid id)
+        /// <summary>
+        /// Busca um produto pelo ID.
+        /// </summary>
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> BuscarPorId(int id)
         {
-            try
+            if (id <= 0)
             {
-                await _produto.Deletar(id);
-                return NoContent();
+                return BadRequest(new
+                {
+                    mensagem = "O identificador do produto é inválido."
+                });
             }
-            catch
+
+            var produto = await _produto.BuscarPorId(id);
+
+            if (produto == null)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    mensagem = "Produto não encontrado."
+                });
             }
+
+            return Ok(produto);
+        }
+
+        /// <summary>
+        /// Exclui fisicamente um produto somente quando não houver dependências.
+        /// </summary>
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = Perfil.Administrador)]
+        public async Task<IActionResult> Deletar(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O identificador do produto é inválido."
+                });
+            }
+
+            var resultado = await _produto.Deletar(id);
+
+            if (!resultado)
+            {
+                return NotFound(new
+                {
+                    mensagem = "Produto não encontrado."
+                });
+            }
+
+            return NoContent();
         }
     }
 }

@@ -20,14 +20,14 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Produtos?> BuscarPorId(Guid id)
+        public async Task<Produtos?> BuscarPorId(int id)
         {
             return await _context.Produtos
                 .Include(p => p.Categoria)
                 .FirstOrDefaultAsync(p => p.IdProdutos == id);
         }
 
-        public async Task Atualizar(Guid id, Produtos produto)
+        public async Task Atualizar(int id, Produtos produto)
         {
             var produtoBuscado = await _context.Produtos.FindAsync(id);
 
@@ -39,7 +39,7 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
             }
         }
 
-        public async Task Deletar(Guid id)
+        public async Task Deletar(int id)
         {
             var produtoBuscado = await _context.Produtos.FindAsync(id);
             if (produtoBuscado != null)
@@ -65,5 +65,6 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
                 .ToListAsync();
         }
 
+       
     }
 }

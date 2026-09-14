@@ -13,7 +13,7 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
         {
             _context = context;
         }
-        public async Task Atualizar(Guid id, Categorias categoria)
+        public async Task Atualizar(int id, Categorias categoria)
         {
             var categoriasBuscado = await _context.Categorias.FindAsync(id);
 
@@ -25,11 +25,13 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
             }
         }
 
-        public async Task<Categorias?> BuscarPorId(Guid id)
+        public async Task<Categorias?> BuscarPorId(int id)
         {
             return await _context.Categorias
                 .FirstOrDefaultAsync(c => c.IdCategorias == id);
         }
+
+      
 
         public async Task Cadastrar(Categorias categoria)
         {
@@ -39,7 +41,7 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task Deletar(Guid id)
+        public async Task Deletar(int id)
         {
             var categoriasBuscado = await _context.Categorias.FindAsync(id);
             if (categoriasBuscado != null)

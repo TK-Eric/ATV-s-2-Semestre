@@ -1,114 +1,186 @@
-﻿using EventPlus.WebAPI.Interfaces;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Projeto_Bolos_do_Jacquin.Constants;
 using Projeto_Bolos_do_Jacquin.DTO;
 using Projeto_Bolos_do_Jacquin.Interfaces;
 using Projeto_Bolos_do_Jacquin.Models;
-using Projeto_Bolos_do_Jacquin.Repositories;
 
 namespace Projeto_Bolos_do_Jacquin.Controller
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class CategoriaController : ControllerBase
     {
         private readonly ICategoria _categoria;
 
-        private readonly IModerationService _moderationService;
-
-        public CategoriaController(ICategoria categoria, IModerationService moderationService)
+        public CategoriaController(ICategoria categoria)
         {
             _categoria = categoria;
-            _moderationService = moderationService;
-
         }
 
-        [HttpGet("{id:Guid}")]
-        public async Task<IActionResult> BuscarPorId(Guid id)
+        /// <summary>
+        /// Busca uma categoria pelo ID.
+        /// </summary>
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> BuscarPorId(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O identificador da categoria é inválido."
+                });
+            }
+
             var categoria = await _categoria.BuscarPorId(id);
 
             if (categoria == null)
             {
-                return NotFound("Categoria não encontrada."); // Retorna HTTP 404
+                return NotFound(new
+                {
+                    mensagem = "Categoria não encontrada."
+                });
             }
 
-            return Ok(categoria); // Retorna HTTP 200 com os dados
+            return Ok(categoria);
         }
 
+        /// <summary>
+        /// Cadastra uma nova categoria.
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Cadastrar([FromBody] CategoriaDTO dto)
+        [Authorize(Roles = Perfil.Administrador)]
+        public async Task<IActionResult> Cadastrar(
+            [FromBody] CategoriaDTO dto)
         {
-            try
-            {
-
-                var categoria = new Categorias
-                {
-                    NomeCategoria = dto.NomeCategoria,
-                };
-
-                await _categoria.Cadastrar(categoria);
-
-                return StatusCode(201, categoria);
-            }
-            catch (Exception e)
+            if (dto == null)
             {
                 return BadRequest(new
                 {
-                    e.Message,
-                    inner = e.InnerException?.Message
-
-
+                    mensagem = "Os dados da categoria são obrigatórios."
                 });
-
             }
 
-        }
-
-        [HttpPut("{id:Guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, [FromForm] CategoriaDTO dto)
-        {
-            try
+            if (string.IsNullOrWhiteSpace(dto.NomeCategoria))
             {
-                var categoria = new Categorias
+                return BadRequest(new
                 {
-                    NomeCategoria = dto.NomeCategoria,
-                };
-
-                await _categoria.Atualizar(id, categoria);
-
-                return NoContent();
+                    mensagem = "O nome da categoria é obrigatório."
+                });
             }
-            catch (Exception e)
+
+            var categoria = new Categorias
             {
-                return BadRequest(e.Message);
-            }
+                NomeCategoria = dto.NomeCategoria.Trim()
+            };
+
+            await _categoria.Cadastrar(categoria);
+
+            return StatusCode(201, categoria);
         }
 
+        /// <summary>
+        /// Atualiza uma categoria existente.
+        /// </summary>
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = Perfil.Administrador)]
+        public async Task<IActionResult> Atualizar(
+            int id,
+            [FromBody] CategoriaDTO dto)
+        {
+            if (id <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O identificador da categoria é inválido."
+                });
+            }
+
+            if (dto == null)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "Os dados da categoria são obrigatórios."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.NomeCategoria))
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O nome da categoria é obrigatório."
+                });
+            }
+
+            var categoriaExistente = await _categoria.BuscarPorId(id);
+
+            if (categoriaExistente == null)
+            {
+                return NotFound(new
+                {
+                    mensagem = "Categoria não encontrada."
+                });
+            }
+
+            var categoria = new Categorias
+            {
+                NomeCategoria = dto.NomeCategoria.Trim()
+            };
+
+            await _categoria.Atualizar(id, categoria);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Lista todas as categorias.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Listar()
         {
-            try
-            {
-                return Ok(await _categoria.Listar());
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var categorias = await _categoria.Listar();
+
+            return Ok(categorias);
         }
 
-        [HttpDelete("{id:Guid}")]
-        public async Task<IActionResult> Deletar(Guid id)
+        /// <summary>
+        /// Exclui uma categoria somente quando ela não possui produtos vinculados.
+        /// </summary>
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = Perfil.Administrador)]
+        public async Task<IActionResult> Deletar(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O identificador da categoria é inválido."
+                });
+            }
+
             try
             {
+                var categoria = await _categoria.BuscarPorId(id);
+
+                if (categoria == null)
+                {
+                    return NotFound(new
+                    {
+                        mensagem = "Categoria não encontrada."
+                    });
+                }
+
                 await _categoria.Deletar(id);
+
                 return NoContent();
             }
-            catch
+            catch (InvalidOperationException)
             {
-                return NotFound();
+                return Conflict(new
+                {
+                    mensagem = "A categoria não pode ser excluída porque possui produtos vinculados."
+                });
             }
         }
-
     }
-}
 }

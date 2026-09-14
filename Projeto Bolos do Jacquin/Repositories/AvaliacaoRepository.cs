@@ -23,7 +23,7 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task Deletar(Guid id)
+        public async Task Deletar(int id)
         {
             var avaliacoesBuscado = await _context.Avaliacoes.FindAsync(id);
             if (avaliacoesBuscado != null)
@@ -43,9 +43,9 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
                 .ToListAsync();
         }
 
-        
 
-        public async Task Atualizar(Guid id, Avaliacoes avaliacoes)
+
+        public async Task Atualizar(int id, Avaliacoes avaliacoes)
         {
             var avaliacoesBuscado = await _context.Avaliacoes.FindAsync(id);
 
@@ -57,17 +57,17 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
             }
         }
 
-        public Task<List<Avaliacoes>> ListarPorProduto(Guid idProduto)
+        public Task<List<Avaliacoes>> ListarPorProduto(int idProduto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Avaliacoes>> ListarPorUsuario(Guid idUsuario)
+        public Task<List<Avaliacoes>> ListarPorUsuario(int idUsuario)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Avaliacoes> BuscarPorId(Guid id)
+        public async Task<Avaliacoes> BuscarPorId(int id)
         {
             return await _context.Avaliacoes
                 .Include(c => c.IdProdutos)
@@ -76,5 +76,4 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
                 .FirstOrDefaultAsync(c => c.IdAvaliacoes == id);
         }
     }
-}
 }

@@ -5,9 +5,9 @@ namespace Projeto_Bolos_do_Jacquin.Interfaces
     public interface IProduto
     {
         Task Cadastrar(Produtos produto);
-        Task Atualizar(Guid id, Produtos produto);
-        Task Deletar(Guid id);
+        Task Atualizar(int id, Produtos produto);
+        Task Deletar(int id);
         Task<List<Produtos>> Listar();
-        Task<Produtos?> BuscarPorId(Guid id);
+        Task<Produtos?> BuscarPorId(int id);
     }
 }

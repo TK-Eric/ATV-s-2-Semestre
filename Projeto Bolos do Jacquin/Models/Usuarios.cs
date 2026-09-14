@@ -10,7 +10,7 @@ namespace Projeto_Bolos_do_Jacquin.Models;
 public partial class Usuarios
 {
     [Key]
-    public Guid IdUsuarios { get; set; }
+    public int IdUsuarios { get; set; }
 
     [StringLength(150)]
     [Unicode(false)]

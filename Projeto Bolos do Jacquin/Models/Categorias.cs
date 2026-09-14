@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Projeto_Bolos_do_Jacquin.Models;
 
-[Index("Nome", Name = "UQ__Categori__7D8FE3B26E205219", IsUnique = true)]
+[Index("NomeCategoria", IsUnique = true)]
 public partial class Categorias
 {
     [Key]
-    public Guid? IdCategorias { get; set; }
+    public int IdCategorias { get; set; }
 
     [StringLength(100)]
     [Unicode(false)]

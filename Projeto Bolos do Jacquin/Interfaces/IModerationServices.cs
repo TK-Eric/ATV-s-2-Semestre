@@ -1,4 +1,4 @@
-﻿namespace EventPlus.WebAPI.Interfaces
+﻿namespace Projeto_Bolos_do_Jacquin.WebAPI.Interfaces
 {
     public interface IModerationService
     {

@@ -1,10 +1,12 @@
-using EventPlus.WebAPI.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Projeto_Bolos_do_Jacquin.BdContextBolos;
+using Projeto_Bolos_do_Jacquin.Interfaces;
+using Projeto_Bolos_do_Jacquin.Repositories;
 using Projeto_Bolos_do_Jacquin.Services;
+using Projeto_Bolos_do_Jacquin.WebAPI.Interfaces;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,19 +27,18 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddDbContext<BolosContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DeafaultConnection")));
+builder.Services.AddDbContext<BolosContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
-//builder.Services.AddScoped<ITipoUsuario, TipoUsuarioRepository>();
-//builder.Services.AddScoped<ITipoEvento, TipoEventoRepository>();
-//builder.Services.AddScoped<IUsuario, UsuarioRepository>();
-//builder.Services.AddScoped<IComentario, ComentarioRepository>();
-//builder.Services.AddScoped<IEvento, EventoRepository>();
-//builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+builder.Services.AddScoped<IUsuario, UsuarioRepository>();
+builder.Services.AddScoped<IProduto, ProdutoRepository>();
+builder.Services.AddScoped<ICategoria, CategoriaRepository>();
+builder.Services.AddScoped<IAvaliacao, AvaliacaoRepository>();
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -49,15 +50,13 @@ builder.Services.AddAuthentication(options =>
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = "EventPlus.WebAPI",
+            ValidIssuer = "Projeto_Bolos_do_Jacquin", 
 
             ValidateAudience = true,
-            ValidAudience = "EventPlus.WebAPI",
+            ValidAudience = "Projeto_Bolos_do_Jacquin",
 
             ValidateLifetime = true,
-
             ClockSkew = TimeSpan.FromMinutes(10),
-
             ValidateIssuerSigningKey = true,
 
             IssuerSigningKey = new SymmetricSecurityKey(
@@ -80,6 +79,7 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 app.UseSwagger();
+
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();

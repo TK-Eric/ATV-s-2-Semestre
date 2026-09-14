@@ -2,6 +2,7 @@
 using Projeto_Bolos_do_Jacquin.BdContextBolos;
 using Projeto_Bolos_do_Jacquin.Interfaces;
 using Projeto_Bolos_do_Jacquin.Models;
+using Projeto_Bolos_do_Jacquin.Services;
 
 namespace Projeto_Bolos_do_Jacquin.Repositories
 {
@@ -14,80 +15,86 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
             _context = context;
         }
 
-        public async Task Cadastrar(Usuarios usuario)
-        {
-            await _context.Usuarios.AddAsync(usuario);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<Usuarios?> BuscarPorId(Guid id)
+        public async Task<Usuarios?> BuscarPorId(int id)
         {
             return await _context.Usuarios
-                .Include(p => p.Nome)
-                .FirstOrDefaultAsync(p => p.IdUsuarios == id);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.IdUsuarios == id);
         }
 
-        public async Task Atualizar(Guid id, Usuarios usuario)
+        public async Task<List<Usuarios>> Listar()
         {
-            var UsuarioBuscado = await _context.Produtos.FindAsync(id);
-
-            if (UsuarioBuscado != null)
-            {
-                // Copia os novos valores para a entidade encontrada
-                _context.Entry(UsuarioBuscado).CurrentValues.SetValues(usuario);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task Deletar(Guid id)
-        {
-            var UsuarioBuscado = await _context.Usuarios.FindAsync(id);
-            if (UsuarioBuscado != null)
-            {
-                _context.Usuarios.Remove(UsuarioBuscado);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task<List<Produtos>> Listar()
-        {
-            return await _context.Produtos
-                .Include(c => c.IdProdutos)
-                .Include(c => c.Nome)
-                .Include(c => c.Descricao)
-                .Include(c => c.DescricaoLonga)
-                .Include(c => c.DescricaoCurta)
-                .Include(c => c.Categoria)
-                .Include(c => c.Avaliacoes)
-                .Include(c => c.Imagem)
-                .Include(c => c.Preco)
+            return await _context.Usuarios
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        public Task Cadastrar(Usuarios usuario)
+        public async Task<bool> Deletar(int id)
         {
-            throw new NotImplementedException();
+            var usuario = await _context.Usuarios.FindAsync(id);
+
+            if (usuario == null)
+                return false;
+
+            usuario.Situacao = false;
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        Task<List<Usuarios>> IUsuario.Listar()
+        public async Task Cadastrar(Usuarios usuario)
         {
-            throw new NotImplementedException();
+            usuario.Senha = Cripitografia.GerarHash(usuario.Senha);
+
+            await _context.Usuarios.AddAsync(usuario);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<Usuarios?> BuscarPorEmailESenha(string email, string senha)
+        public async Task<bool> EmailExiste(string email, int? idIgnorar = null)
         {
-            throw new NotImplementedException();
+            return await _context.Usuarios
+                .AnyAsync(u =>
+                    u.Email == email &&
+                    (!idIgnorar.HasValue || u.IdUsuarios != idIgnorar.Value));
         }
 
-        Task<Usuarios?> IUsuario.BuscarPorId(Guid id)
+        public async Task<Usuarios?> BuscarPorEmailESenha(string email, string senha)
         {
-            throw new NotImplementedException();
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u =>
+                    u.Email == email &&
+                    u.Situacao);
+
+            if (usuario == null)
+                return null;
+
+            bool senhaValida =
+                Cripitografia.CompararHash(senha, usuario.Senha);
+
+            if (!senhaValida)
+                return null;
+
+            return usuario;
         }
 
-        public Task Atualizar(Guid id, Usuarios usuario)
+        public async Task Atualizar(int id, Usuarios usuario)
         {
-            throw new NotImplementedException();
+            var usuarioBuscado = await _context.Usuarios.FindAsync(id);
+
+            if (usuarioBuscado == null)
+                return;
+
+            usuarioBuscado.Nome = usuario.Nome;
+            usuarioBuscado.Email = usuario.Email;
+
+            if (!string.IsNullOrWhiteSpace(usuario.Senha))
+            {
+                usuarioBuscado.Senha =
+                    Cripitografia.GerarHash(usuario.Senha);
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }
