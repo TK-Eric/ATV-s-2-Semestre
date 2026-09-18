@@ -19,11 +19,7 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             _avaliacao = avaliacao;
         }
 
-        // =========================================================
-        // CRIAR AVALIAÇÃO
-        // SOMENTE CLIENTE AUTENTICADO
-        // =========================================================
-
+        // POST: api/Avaliacao
         [HttpPost]
         [Authorize(Roles = Perfil.Cliente)]
         public async Task<IActionResult> Cadastrar(
@@ -53,7 +49,6 @@ namespace Projeto_Bolos_do_Jacquin.Controller
                 });
             }
 
-            // Obtém o usuário EXCLUSIVAMENTE do JWT
             var usuarioIdClaim =
                 User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -65,25 +60,10 @@ namespace Projeto_Bolos_do_Jacquin.Controller
                 });
             }
 
-            // Impede duas avaliações do mesmo cliente para o mesmo produto
-            var avaliacaoExistente =
-                await _avaliacao.ExistePorUsuarioEProduto(
-                    usuarioId,
-                    dto.IdProdutos);
-
-            if (avaliacaoExistente)
-            {
-                return Conflict(new
-                {
-                    mensagem =
-                        "Você já possui uma avaliação para este produto. " +
-                        "Edite a avaliação existente."
-                });
-            }
-
             var avaliacao = new Avaliacoes
             {
                 Nota = (int)dto.Nota,
+
                 Comentario = string.IsNullOrWhiteSpace(dto.Comentario)
                     ? null
                     : dto.Comentario.Trim(),
@@ -92,8 +72,8 @@ namespace Projeto_Bolos_do_Jacquin.Controller
                 IdProdutos = dto.IdProdutos,
                 IdUsuarios = usuarioId,
 
-                // Nova avaliação começa publicada.
-                Situacao = "PUBLICADA"
+                Situacao = "Publicada",
+                Exibe = true
             };
 
             await _avaliacao.Cadastrar(avaliacao);
@@ -101,11 +81,7 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             return StatusCode(201, avaliacao);
         }
 
-        // =========================================================
-        // EDITAR PRÓPRIA AVALIAÇÃO
-        // SOMENTE CLIENTE AUTENTICADO
-        // =========================================================
-
+        // PUT: api/Avaliacao/{id}
         [HttpPut("{id:int}")]
         [Authorize(Roles = Perfil.Cliente)]
         public async Task<IActionResult> Atualizar(
@@ -125,6 +101,14 @@ namespace Projeto_Bolos_do_Jacquin.Controller
                 return BadRequest(new
                 {
                     mensagem = "Os dados da avaliação são obrigatórios."
+                });
+            }
+
+            if (dto.IdProdutos <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O produto informado é inválido."
                 });
             }
 
@@ -158,36 +142,34 @@ namespace Projeto_Bolos_do_Jacquin.Controller
                 });
             }
 
-            // Impede alteração da avaliação de outro cliente.
             if (avaliacaoExistente.IdUsuarios != usuarioId)
             {
                 return Forbid();
             }
 
-            // O cliente pode alterar somente nota e comentário.
-            // Produto e usuário NÃO podem ser alterados.
-            avaliacaoExistente.Nota = (int)dto.Nota;
+            var avaliacaoAtualizada = new Avaliacoes
+            {
+                Nota = (int)dto.Nota,
 
-            avaliacaoExistente.Comentario =
-                string.IsNullOrWhiteSpace(dto.Comentario)
+                Comentario = string.IsNullOrWhiteSpace(dto.Comentario)
                     ? null
-                    : dto.Comentario.Trim();
+                    : dto.Comentario.Trim(),
 
-            avaliacaoExistente.DataAlteracao = DateTime.UtcNow;
+                IdProdutos = avaliacaoExistente.IdProdutos
+            };
 
-            await _avaliacao.Atualizar(id, avaliacaoExistente);
+            await _avaliacao.Atualizar(
+                id,
+                avaliacaoAtualizada);
 
             return NoContent();
         }
 
-        // =========================================================
-        // LISTAGEM PÚBLICA POR PRODUTO
-        // SOMENTE AVALIAÇÕES PUBLICADAS
-        // =========================================================
-
+        // GET: api/Avaliacao/produto/{produtoId}
         [HttpGet("produto/{produtoId:int}")]
         [AllowAnonymous]
-        public async Task<IActionResult> ListarPorProduto(int produtoId)
+        public async Task<IActionResult> ListarPorProduto(
+            int produtoId)
         {
             if (produtoId <= 0)
             {
@@ -198,16 +180,12 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             }
 
             var avaliacoes =
-                await _avaliacao.ListarPublicadasPorProduto(produtoId);
+                await _avaliacao.ListarPorProduto(produtoId);
 
             return Ok(avaliacoes);
         }
 
-        // =========================================================
-        // LISTAR PRÓPRIAS AVALIAÇÕES
-        // SOMENTE CLIENTE AUTENTICADO
-        // =========================================================
-
+        // GET: api/Avaliacao/minhas
         [HttpGet("minhas")]
         [Authorize(Roles = Perfil.Cliente)]
         public async Task<IActionResult> MinhasAvaliacoes()
@@ -229,11 +207,7 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             return Ok(avaliacoes);
         }
 
-        // =========================================================
-        // EXCLUIR PRÓPRIA AVALIAÇÃO
-        // SOMENTE CLIENTE AUTENTICADO
-        // =========================================================
-
+        // DELETE: api/Avaliacao/{id}
         [HttpDelete("{id:int}")]
         [Authorize(Roles = Perfil.Cliente)]
         public async Task<IActionResult> Deletar(int id)
@@ -268,7 +242,6 @@ namespace Projeto_Bolos_do_Jacquin.Controller
                 });
             }
 
-            // Impede exclusão da avaliação de outro cliente.
             if (avaliacao.IdUsuarios != usuarioId)
             {
                 return Forbid();

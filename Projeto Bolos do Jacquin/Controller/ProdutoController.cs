@@ -18,9 +18,6 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             _produto = produto;
         }
 
-        /// <summary>
-        /// Cadastra um novo produto.
-        /// </summary>
         [HttpPost]
         [Authorize(Roles = Perfil.Administrador)]
         public async Task<IActionResult> Cadastrar([FromBody] ProdutoDTO dto)
@@ -82,9 +79,6 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             return StatusCode(201, produto);
         }
 
-        /// <summary>
-        /// Atualiza um produto existente.
-        /// </summary>
         [HttpPut("{id:int}")]
         [Authorize(Roles = Perfil.Administrador)]
         public async Task<IActionResult> Atualizar(
@@ -156,10 +150,6 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             return NoContent();
         }
 
-        /// <summary>
-        /// Lista os produtos do catálogo.
-        /// Permite pesquisa por nome, categoria e faixa de preço.
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Listar(
             [FromQuery] string? nome,
@@ -211,9 +201,6 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             return Ok(produtos);
         }
 
-        /// <summary>
-        /// Busca um produto pelo ID.
-        /// </summary>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> BuscarPorId(int id)
         {
@@ -238,9 +225,6 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             return Ok(produto);
         }
 
-        /// <summary>
-        /// Exclui fisicamente um produto somente quando não houver dependências.
-        /// </summary>
         [HttpDelete("{id:int}")]
         [Authorize(Roles = Perfil.Administrador)]
         public async Task<IActionResult> Deletar(int id)

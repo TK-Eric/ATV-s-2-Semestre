@@ -20,4 +20,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
+  <!-- Excluir arquivos duplicados que estão dentro da subpasta Projeto Bolos do Jacquin\Projeto Bolos do Jacquin gerada acidentalmente -->
+
 </Project>

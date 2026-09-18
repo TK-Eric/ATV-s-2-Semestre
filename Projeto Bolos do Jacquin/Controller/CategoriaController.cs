@@ -18,9 +18,8 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             _categoria = categoria;
         }
 
-        /// <summary>
-        /// Busca uma categoria pelo ID.
-        /// </summary>
+     
+        
         [HttpGet("{id:int}")]
         public async Task<IActionResult> BuscarPorId(int id)
         {
@@ -45,9 +44,7 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             return Ok(categoria);
         }
 
-        /// <summary>
-        /// Cadastra uma nova categoria.
-        /// </summary>
+      
         [HttpPost]
         [Authorize(Roles = Perfil.Administrador)]
         public async Task<IActionResult> Cadastrar(
@@ -79,9 +76,7 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             return StatusCode(201, categoria);
         }
 
-        /// <summary>
-        /// Atualiza uma categoria existente.
-        /// </summary>
+   
         [HttpPut("{id:int}")]
         [Authorize(Roles = Perfil.Administrador)]
         public async Task<IActionResult> Atualizar(
@@ -132,9 +127,7 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             return NoContent();
         }
 
-        /// <summary>
-        /// Lista todas as categorias.
-        /// </summary>
+     
         [HttpGet]
         public async Task<IActionResult> Listar()
         {
@@ -143,9 +136,7 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             return Ok(categorias);
         }
 
-        /// <summary>
-        /// Exclui uma categoria somente quando ela não possui produtos vinculados.
-        /// </summary>
+        
         [HttpDelete("{id:int}")]
         [Authorize(Roles = Perfil.Administrador)]
         public async Task<IActionResult> Deletar(int id)

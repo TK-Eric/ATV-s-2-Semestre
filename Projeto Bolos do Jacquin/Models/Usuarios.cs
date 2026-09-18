@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Projeto_Bolos_do_Jacquin.Models;
 
-[Index("Email", Name = "UQ__Usuarios__A9D105345D5C7F82", IsUnique = true)]
+[Index(
+    "Email",
+    Name = "UQ__Usuarios__A9D105345D5C7F82",
+    IsUnique = true)]
 public partial class Usuarios
 {
     [Key]
@@ -31,5 +32,6 @@ public partial class Usuarios
     public bool? Situacao { get; set; }
 
     [InverseProperty("Usuario")]
-    public virtual ICollection<Avaliacoes> Avaliacoes { get; set; } = new List<Avaliacoes>();
+    public virtual ICollection<Avaliacoes> Avaliacoes { get; set; }
+        = new List<Avaliacoes>();
 }

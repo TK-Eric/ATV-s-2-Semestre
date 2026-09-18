@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +9,25 @@ public partial class Avaliacoes
 {
     [Key]
     public int IdAvaliacoes { get; set; }
+
     public int Nota { get; set; }
+
     public string? Comentario { get; set; }
+
     public DateTime DataCriacao { get; set; }
 
+    public DateTime? DataUltimaAlteracao { get; set; }
+
+    [StringLength(30)]
+    [Unicode(false)]
+    public string Situacao { get; set; } = "Publicada";
+
+    [StringLength(500)]
+    [Unicode(false)]
+    public string? MotivoOcultacao { get; set; }
+
     public int IdUsuarios { get; set; }
+
     public int? IdProdutos { get; set; }
 
     [ForeignKey("IdProdutos")]

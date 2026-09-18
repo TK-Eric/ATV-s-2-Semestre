@@ -33,38 +33,66 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
 
             if (produtoBuscado != null)
             {
-                // Copia os novos valores para a entidade encontrada
-                _context.Entry(produtoBuscado).CurrentValues.SetValues(produto);
+                _context.Entry(produtoBuscado)
+                    .CurrentValues
+                    .SetValues(produto);
+
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task Deletar(int id)
+        public async Task<bool> Deletar(int id)
         {
             var produtoBuscado = await _context.Produtos.FindAsync(id);
-            if (produtoBuscado != null)
+
+            if (produtoBuscado == null)
             {
-                _context.Produtos.Remove(produtoBuscado);
-                await _context.SaveChangesAsync();
+                return false;
             }
+
+            _context.Produtos.Remove(produtoBuscado);
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public async Task<List<Produtos>> Listar()
+        public async Task<List<Produtos>> Listar(
+            string? nome,
+            int? categoria,
+            decimal? precoMin,
+            decimal? precoMax)
         {
-            return await _context.Produtos
-                .Include(c => c.IdProdutos)
-                .Include(c => c.Nome)
-                .Include(c => c.Descricao)
-                .Include(c => c.DescricaoLonga)
-                .Include(c => c.DescricaoCurta)
-                .Include(c => c.Categoria)
-                .Include(c => c.Avaliacoes)
-                .Include(c => c.Imagem)
-                .Include(c => c.Preco)
+            var query = _context.Produtos
+                .Include(p => p.Categoria)
                 .AsNoTracking()
-                .ToListAsync();
-        }
+                .AsQueryable();
 
-       
+            if (!string.IsNullOrWhiteSpace(nome))
+            {
+                query = query.Where(p =>
+                    p.Nome.Contains(nome));
+            }
+
+            if (categoria.HasValue)
+            {
+                query = query.Where(p =>
+                    p.IdCategoria == categoria.Value);
+            }
+
+            if (precoMin.HasValue)
+            {
+                query = query.Where(p =>
+                    p.Preco >= precoMin.Value);
+            }
+
+            if (precoMax.HasValue)
+            {
+                query = query.Where(p =>
+                    p.Preco <= precoMax.Value);
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

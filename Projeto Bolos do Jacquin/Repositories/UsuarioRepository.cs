@@ -19,7 +19,8 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
         {
             return await _context.Usuarios
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.IdUsuarios == id);
+                .FirstOrDefaultAsync(u =>
+                    u.IdUsuarios == id);
         }
 
         public async Task<List<Usuarios>> Listar()
@@ -31,10 +32,13 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
 
         public async Task<bool> Deletar(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
+            var usuario =
+                await _context.Usuarios.FindAsync(id);
 
             if (usuario == null)
+            {
                 return false;
+            }
 
             usuario.Situacao = false;
 
@@ -45,53 +49,79 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
 
         public async Task Cadastrar(Usuarios usuario)
         {
-            usuario.Senha = Cripitografia.GerarHash(usuario.Senha);
+            usuario.Senha =
+                Cripitografia.GerarHash(usuario.Senha);
 
             await _context.Usuarios.AddAsync(usuario);
+
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> EmailExiste(string email, int? idIgnorar = null)
+        public async Task<bool> EmailExiste(
+            string email,
+            int? idIgnorar = null)
         {
+            email = email.Trim();
+
             return await _context.Usuarios
                 .AnyAsync(u =>
                     u.Email == email &&
-                    (!idIgnorar.HasValue || u.IdUsuarios != idIgnorar.Value));
+                    (!idIgnorar.HasValue ||
+                     u.IdUsuarios != idIgnorar.Value));
         }
 
-        public async Task<Usuarios?> BuscarPorEmailESenha(string email, string senha)
+        public async Task<Usuarios?> BuscarPorEmailESenha(
+            string email,
+            string senha)
         {
-            var usuario = await _context.Usuarios
-                .FirstOrDefaultAsync(u =>
-                    u.Email == email &&
-                    u.Situacao);
+            email = email.Trim();
+
+            var usuario =
+                await _context.Usuarios
+                    .FirstOrDefaultAsync(u =>
+                        u.Email == email);
 
             if (usuario == null)
+            {
                 return null;
+            }
 
             bool senhaValida =
-                Cripitografia.CompararHash(senha, usuario.Senha);
+                Cripitografia.CompararHash(
+                    senha,
+                    usuario.Senha);
 
             if (!senhaValida)
+            {
                 return null;
+            }
 
             return usuario;
         }
 
-        public async Task Atualizar(int id, Usuarios usuario)
+        public async Task Atualizar(
+            int id,
+            Usuarios usuario)
         {
-            var usuarioBuscado = await _context.Usuarios.FindAsync(id);
+            var usuarioBuscado =
+                await _context.Usuarios.FindAsync(id);
 
             if (usuarioBuscado == null)
+            {
                 return;
+            }
 
-            usuarioBuscado.Nome = usuario.Nome;
-            usuarioBuscado.Email = usuario.Email;
+            usuarioBuscado.Nome =
+                usuario.Nome;
+
+            usuarioBuscado.Email =
+                usuario.Email;
 
             if (!string.IsNullOrWhiteSpace(usuario.Senha))
             {
                 usuarioBuscado.Senha =
-                    Cripitografia.GerarHash(usuario.Senha);
+                    Cripitografia.GerarHash(
+                        usuario.Senha);
             }
 
             await _context.SaveChangesAsync();

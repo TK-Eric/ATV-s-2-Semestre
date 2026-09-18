@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Projeto_Bolos_do_Jacquin.BdContextBolos;
-using Projeto_Bolos_do_Jacquin.Controller;
 using Projeto_Bolos_do_Jacquin.Interfaces;
 using Projeto_Bolos_do_Jacquin.Models;
 
@@ -15,65 +14,91 @@ namespace Projeto_Bolos_do_Jacquin.Repositories
             _context = context;
         }
 
-        public async Task Cadastrar(Avaliacoes avaliacoes)
+        public async Task Cadastrar(Avaliacoes avaliacao)
         {
-            avaliacoes.DataCriacao = DateTime.Now;
-            await _context.Avaliacoes.AddAsync(avaliacoes);
-            //esse metodo adiciona ele no banco, manipular o banco de dados
+            avaliacao.DataCriacao = DateTime.UtcNow;
+
+            await _context.Avaliacoes.AddAsync(avaliacao);
+
             await _context.SaveChangesAsync();
         }
 
         public async Task Deletar(int id)
         {
-            var avaliacoesBuscado = await _context.Avaliacoes.FindAsync(id);
-            if (avaliacoesBuscado != null)
+            var avaliacaoBuscada =
+                await _context.Avaliacoes.FindAsync(id);
+
+            if (avaliacaoBuscada == null)
             {
-                _context.Avaliacoes.Remove(avaliacoesBuscado);
-                await _context.SaveChangesAsync();
+                return;
             }
+
+            _context.Avaliacoes.Remove(avaliacaoBuscada);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<Avaliacoes>> Listar()
         {
             return await _context.Avaliacoes
-                .Include(c => c.IdProdutos)
-                .Include(c => c.IdUsuarios)
-                .Include(c => c.DataCriacao)
+                .Include(a => a.Produto)
+                .Include(a => a.Usuario)
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-
-
-        public async Task Atualizar(int id, Avaliacoes avaliacoes)
-        {
-            var avaliacoesBuscado = await _context.Avaliacoes.FindAsync(id);
-
-            if (avaliacoesBuscado != null)
-            {
-                // Copia os novos valores para a entidade encontrada
-                _context.Entry(avaliacoesBuscado).CurrentValues.SetValues(avaliacoes);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public Task<List<Avaliacoes>> ListarPorProduto(int idProduto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Avaliacoes>> ListarPorUsuario(int idUsuario)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Avaliacoes> BuscarPorId(int id)
+        public async Task<List<Avaliacoes>> ListarPorProduto(
+            int idProduto)
         {
             return await _context.Avaliacoes
-                .Include(c => c.IdProdutos)
-                .Include(c => c.IdUsuarios)
-                .Include(c => c.DataCriacao)
-                .FirstOrDefaultAsync(c => c.IdAvaliacoes == id);
+                .Where(a =>
+                    a.IdProdutos == idProduto &&
+                    a.Exibe)
+                .Include(a => a.Usuario)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<List<Avaliacoes>> ListarPorUsuario(
+            int idUsuario)
+        {
+            return await _context.Avaliacoes
+                .Where(a => a.IdUsuarios == idUsuario)
+                .Include(a => a.Produto)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<Avaliacoes?> BuscarPorId(int id)
+        {
+            return await _context.Avaliacoes
+                .Include(a => a.Produto)
+                .Include(a => a.Usuario)
+                .FirstOrDefaultAsync(a =>
+                    a.IdAvaliacoes == id);
+        }
+
+        public async Task Atualizar(
+            int id,
+            Avaliacoes avaliacao)
+        {
+            var avaliacaoBuscada =
+                await _context.Avaliacoes.FindAsync(id);
+
+            if (avaliacaoBuscada == null)
+            {
+                return;
+            }
+
+            avaliacaoBuscada.Nota = avaliacao.Nota;
+
+            avaliacaoBuscada.Comentario =
+                avaliacao.Comentario;
+
+            avaliacaoBuscada.DataUltimaAlteracao =
+                DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

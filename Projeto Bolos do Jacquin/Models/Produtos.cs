@@ -22,6 +22,8 @@ public partial class Produtos
     [Unicode(false)]
     public string? EnderecoImagem { get; set; }
 
+    public string? Descricao { get; set; }
+
     public string? DescricaoCurta { get; set; }
 
     public string? DescricaoLonga { get; set; }

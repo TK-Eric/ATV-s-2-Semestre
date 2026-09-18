@@ -19,55 +19,61 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             _usuario = usuario;
         }
 
-        /// <summary>
-        /// Cadastra um novo cliente.
-        /// </summary>
+   
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Cadastrar([FromBody] UsuarioDTO dto)
+        public async Task<IActionResult> Cadastrar(
+            [FromBody] UsuarioDTO dto)
         {
             if (dto == null)
+            {
                 return BadRequest(new
                 {
                     mensagem = "Os dados do usuário são obrigatórios."
                 });
+            }
 
             if (string.IsNullOrWhiteSpace(dto.Nome))
+            {
                 return BadRequest(new
                 {
                     mensagem = "O nome é obrigatório."
                 });
+            }
 
             if (string.IsNullOrWhiteSpace(dto.Email))
+            {
                 return BadRequest(new
                 {
                     mensagem = "O e-mail é obrigatório."
                 });
+            }
 
             if (string.IsNullOrWhiteSpace(dto.Senha))
+            {
                 return BadRequest(new
                 {
                     mensagem = "A senha é obrigatória."
                 });
+            }
 
-            bool emailExiste = await _usuario.EmailExiste(dto.Email);
+            bool emailExiste =
+                await _usuario.EmailExiste(dto.Email.Trim());
 
             if (emailExiste)
+            {
                 return Conflict(new
                 {
                     mensagem = "Já existe um usuário cadastrado com este e-mail."
                 });
+            }
 
             var usuario = new Usuarios
             {
                 Nome = dto.Nome.Trim(),
                 Email = dto.Email.Trim(),
                 Senha = dto.Senha,
-
-                // Cadastro público sempre cria CLIENTE.
                 Perfil = Perfil.Cliente,
-
-                // Novo usuário começa ativo.
                 Situacao = true
             };
 
@@ -79,61 +85,67 @@ namespace Projeto_Bolos_do_Jacquin.Controller
                 Nome = usuario.Nome,
                 Email = usuario.Email,
                 Perfil = usuario.Perfil,
-                Situacao = (bool)usuario.Situacao
+                Situacao = usuario.Situacao ?? false
             };
 
             return StatusCode(201, response);
         }
 
-        /// <summary>
-        /// Lista todos os usuários.
-        /// </summary>
+      
         [HttpGet]
         [Authorize(Roles = Perfil.Administrador)]
         public async Task<IActionResult> Listar()
         {
             var usuarios = await _usuario.Listar();
 
-            var response = usuarios.Select(usuario => new UsuarioResponseDTO
-            {
-                IdUsuarios = usuario.IdUsuarios,
-                Nome = usuario.Nome,
-                Email = usuario.Email,
-                Perfil = usuario.Perfil,
-                Situacao = (bool)usuario.Situacao
-            }).ToList();
+            var response = usuarios.Select(usuario =>
+                new UsuarioResponseDTO
+                {
+                    IdUsuarios = usuario.IdUsuarios,
+                    Nome = usuario.Nome,
+                    Email = usuario.Email,
+                    Perfil = usuario.Perfil,
+                    Situacao = usuario.Situacao ?? false
+                })
+                .ToList();
 
             return Ok(response);
         }
 
-        /// <summary>
-        /// Consulta os dados do usuário autenticado.
-        /// </summary>
+    
         [HttpGet("me")]
         [Authorize]
         public async Task<IActionResult> Me()
         {
-            var claimId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var claimId =
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (!int.TryParse(claimId, out int usuarioId))
+            {
                 return Unauthorized(new
                 {
                     mensagem = "Token inválido."
                 });
+            }
 
-            var usuario = await _usuario.BuscarPorId(usuarioId);
+            var usuario =
+                await _usuario.BuscarPorId(usuarioId);
 
             if (usuario == null)
+            {
                 return NotFound(new
                 {
                     mensagem = "Usuário não encontrado."
                 });
+            }
 
-            if (!(bool)usuario.Situacao)
+            if (usuario.Situacao != true)
+            {
                 return Unauthorized(new
                 {
                     mensagem = "Usuário desativado."
                 });
+            }
 
             var response = new UsuarioResponseDTO
             {
@@ -141,27 +153,34 @@ namespace Projeto_Bolos_do_Jacquin.Controller
                 Nome = usuario.Nome,
                 Email = usuario.Email,
                 Perfil = usuario.Perfil,
-                Situacao = (bool)usuario.Situacao
+                Situacao = usuario.Situacao ?? false
             };
 
             return Ok(response);
         }
 
-        /// <summary>
-        /// Busca um usuário por ID.
-        /// Apenas administradores podem consultar outros usuários.
-        /// </summary>
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [Authorize(Roles = Perfil.Administrador)]
         public async Task<IActionResult> BuscarPorId(int id)
         {
-            var usuario = await _usuario.BuscarPorId(id);
+            if (id <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O identificador do usuário é inválido."
+                });
+            }
+
+            var usuario =
+                await _usuario.BuscarPorId(id);
 
             if (usuario == null)
+            {
                 return NotFound(new
                 {
                     mensagem = "Usuário não encontrado."
                 });
+            }
 
             var response = new UsuarioResponseDTO
             {
@@ -169,26 +188,35 @@ namespace Projeto_Bolos_do_Jacquin.Controller
                 Nome = usuario.Nome,
                 Email = usuario.Email,
                 Perfil = usuario.Perfil,
-                Situacao = (bool)usuario.Situacao
+                Situacao = usuario.Situacao ?? false
             };
 
             return Ok(response);
         }
 
-        /// <summary>
-        /// Desativa um usuário.
-        /// </summary>
-        [HttpDelete("{id}")]
+       
+        [HttpDelete("{id:int}")]
         [Authorize(Roles = Perfil.Administrador)]
         public async Task<IActionResult> Deletar(int id)
         {
-            var resultado = await _usuario.Deletar(id);
+            if (id <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O identificador do usuário é inválido."
+                });
+            }
+
+            var resultado =
+                await _usuario.Deletar(id);
 
             if (!resultado)
+            {
                 return NotFound(new
                 {
                     mensagem = "Usuário não encontrado."
                 });
+            }
 
             return Ok(new
             {
@@ -196,55 +224,87 @@ namespace Projeto_Bolos_do_Jacquin.Controller
             });
         }
 
-        /// <summary>
-        /// Atualiza os dados de um usuário.
-        /// Administradores podem atualizar qualquer usuário.
-        /// Clientes somente podem atualizar a própria conta.
-        /// </summary>
-        [HttpPut("{id}")]
+       
+        [HttpPut("{id:int}")]
         [Authorize]
         public async Task<IActionResult> Atualizar(
             int id,
             [FromBody] UsuarioDTO dto)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O identificador do usuário é inválido."
+                });
+            }
+
             if (dto == null)
+            {
                 return BadRequest(new
                 {
                     mensagem = "Os dados são obrigatórios."
                 });
+            }
 
-            var claimId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(dto.Nome))
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O nome é obrigatório."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.Email))
+            {
+                return BadRequest(new
+                {
+                    mensagem = "O e-mail é obrigatório."
+                });
+            }
+
+            var claimId =
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (!int.TryParse(claimId, out int usuarioLogadoId))
+            {
                 return Unauthorized(new
                 {
                     mensagem = "Token inválido."
                 });
+            }
 
             bool administrador =
                 User.IsInRole(Perfil.Administrador);
 
             if (!administrador && usuarioLogadoId != id)
+            {
                 return Forbid();
+            }
 
-            var usuarioExistente = await _usuario.BuscarPorId(id);
+            var usuarioExistente =
+                await _usuario.BuscarPorId(id);
 
             if (usuarioExistente == null)
+            {
                 return NotFound(new
                 {
                     mensagem = "Usuário não encontrado."
                 });
+            }
 
-            bool emailExiste = await _usuario.EmailExiste(
-                dto.Email,
-                id
-            );
+            bool emailExiste =
+                await _usuario.EmailExiste(
+                    dto.Email.Trim(),
+                    id);
 
             if (emailExiste)
+            {
                 return Conflict(new
                 {
                     mensagem = "Já existe outro usuário com este e-mail."
                 });
+            }
 
             var usuario = new Usuarios
             {
