@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula de Dom</title>
+    <style>
+        .destaque {
+            background-color: blueviolet;
+            color: black;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="titulo">Introducao ao Dom (Document Object Models)</h1>
+    <p id="Descricao">Primeiro paragrafo</p>
+
+    <p class="messagem"> Primeira mensagem</p>
+    <p class="messagem"> Segunda mensagem</p>
+    <button id="botao" onclick="mostrarMensagem()"> Clique Aqui </button>
+    <button onclick="alternarDestaque()">Destacar titulo</button>
+    <input id="nome" type="text" placeholder="digite seu nome">
+    <button onclick="MostraNome()">Mostra Nome</button>
+    <script src="script.js"></script>
+</body>
+</html>
