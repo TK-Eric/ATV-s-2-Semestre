@@ -4,30 +4,20 @@ function calcularResultado(operacao) {
     const listaResultado = document.querySelector("#listaResultado");
     const mensagem = document.querySelector("#mensagem");
 
-    // Converte os valores para números
     const num1 = parseFloat(input1.value);
     const num2 = parseFloat(input2.value);
 
-    // Valida se os campos foram preenchidos
-    if (isNaN(num1) || isNaN(num2)) {
-        if (mensagem) mensagem.textContent = "Digite os dois números!";
-        return;
-    }
+  if (num1 === "" || num2 === "") {
+    mensagem.textContent = "FAZ DIREITO C$@%&%O!";
+    return;
+}
 
-    // Evita divisão por zero
-    if (operacao === "/" && num2 === 0) {
-        if (mensagem) mensagem.textContent = "Não dá para dividir por zero!";
-        return;
-    }
+mensagem.textContent = "";
 
-    if (mensagem) mensagem.textContent = "";
-
-    // Cálculo usando IF simples
-    let resultado;
-    if (operacao === "+") resultado = num1 + num2;
-    if (operacao === "-") resultado = num1 - num2;
-    if (operacao === "*") resultado = num1 * num2;
-    if (operacao === "/") resultado = num1 / num2;
+if (operacao === "+") resultado = num1 + num2;
+else if (operacao === "-") resultado = num1 - num2;
+else if (operacao === "*") resultado = num1 * num2;
+else if (operacao === "/") resultado = num1 / num2;
 
     // Adiciona na lista
     const item = document.createElement("li");
@@ -35,9 +25,9 @@ function calcularResultado(operacao) {
 
     // Botão apagar
     const botaoExcluir = document.createElement("button");
-    botaoExcluir.textContent = "Apagar";
+    botaoExcluir.textContent = "oBLITERAR FEZES NO ELEVADOR";
     botaoExcluir.onclick = () => item.remove();
-
+    
     item.appendChild(botaoExcluir);
     listaResultado.appendChild(item);
 
