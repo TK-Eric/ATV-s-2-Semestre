@@ -1,15 +1,33 @@
+import { useEffect, useState } from "react";
 import logoEvent from "../../assets/logo-event.svg";
-import bannerEvento1 from "../../assets/banner-1.png";
-import bannerEvento2 from "../../assets/banner-2.png";
-import bannerEvento3 from "../../assets/banner-3.png";
 import visao from "../../assets/visao-img.png";
 
-// 1. Import do componente Carrossel
+// Imports da API
+import { eventoService } from "../../services/eventPlusService";
+import type { Evento } from "../../types/api";
+
 import Carrossel from "../../components/carrossel/Carrossel";
+import CardEvento from "../../components/CardEvento/CardEvento";
 
 import "./Home.css";
 
 function Home() {
+    // 1. Estado para guardar os eventos da API
+    const [eventos, setEventos] = useState<Evento[]>([]);
+
+    // 2. Chamada à API ao carregar a página
+    useEffect(() => {
+        async function carregarProximos() {
+            try {
+                const dados = await eventoService.listaProximos();
+                setEventos(dados);
+            } catch (error) {
+                console.error("Erro ao carregar próximos eventos:", error);
+            }
+        }
+        carregarProximos();
+    }, []);
+
     return (
         <>
             <header className="home-header">
@@ -27,7 +45,6 @@ function Home() {
             </header>
 
             <main>
-                {/* 2. Carrossel aplicado na secção do banner */}
                 <section id="inicio" className="home-banner">
                     <Carrossel />
                 </section>
@@ -57,54 +74,17 @@ function Home() {
                     </div>
 
                     <div className="home-eventos-lista">
-                        <article className="home-evento-card">
-                            <img
-                                src={bannerEvento1}
-                                alt="Evento de tecnologia"
+                        {/* 3. Mapeamento dos dados reais vindos da base de dados */}
+                        {eventos.map((e) => (
+                            <CardEvento
+                                key={e.idEvento}
+                                id={e.idEvento}
+                                titulo={e.nome}
+                                imagem={e.imagemUrl || ""}
+                                descricao={e.descricao}
+                                categoria={e.idTipoEventoNavigation?.titulo || "Sem categoria"}
                             />
-                            <span>Tecnologia</span>
-
-                            <div className="home-evento-card-info">
-                                <h3>Evento de tecnologia</h3>
-                                <p>
-                                    Conheça novidades e tendências do setor.
-                                </p>
-                                <button type="button">Ver Evento</button>
-                            </div>
-                        </article>
-
-                        <article className="home-evento-card">
-                            <img
-                                src={bannerEvento2}
-                                alt="Workshop de tecnologia"
-                            />
-                            <span>Workshop</span>
-
-                            <div className="home-evento-card-info">
-                                <h3>Workshop de tecnologia</h3>
-                                <p>
-                                    Pratique desenvolvimento com atividades
-                                    guiadas.
-                                </p>
-                                <button type="button">Ver Evento</button>
-                            </div>
-                        </article>
-
-                        <article className="home-evento-card">
-                            <img
-                                src={bannerEvento3}
-                                alt="Meetup de inteligência artificial"
-                            />
-                            <span>Meetup</span>
-
-                            <div className="home-evento-card-info">
-                                <h3>Meetup de inteligência</h3>
-                                <p>
-                                    Discussões sobre como usar IA.
-                                </p>
-                                <button type="button">Ver Evento</button>
-                            </div>
-                        </article>
+                        ))}
                     </div>
                 </section>
 

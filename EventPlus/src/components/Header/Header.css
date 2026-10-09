@@ -1,0 +1,52 @@
+:root {
+    --cinza-claro: #ded9da;
+    --branco: #ffffff;
+    --cor-texto: #17143f;
+    --vermelho: #b51d44;
+    --vermelho-escuro: #821b47;
+    --azul-claro: rgba(0, 80, 251, 0.1);
+}
+
+.header {
+    border-bottom: 1px solid var(--cinza-claro);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #ffffff;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.header-conteudo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    width: min(1200px, calc(100% - 48px));
+    min-height: 60px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+.header img {
+    width: 130px;
+}
+
+.header-conteudo nav {
+    display: flex;
+    gap: 28px;
+}
+
+.header-conteudo nav a {
+    text-decoration: none;
+    color: var(--cor-texto);
+}
+
+.header-botao-login {
+    border: none;
+    background: none;
+    color: var(--cor-texto);
+    font-family: "Poppins", Arial, sans-serif;
+    font-size: 17px;
+    cursor: pointer;
+    text-decoration: none;
+}

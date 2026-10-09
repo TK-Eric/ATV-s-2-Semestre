@@ -19,7 +19,6 @@ function Carrossel() {
                         alt="Banner do primeiro evento"
                     />
                 </div>
-
                 <div className="carousel-item">
                     <img
                         src={bannerEvento2}
@@ -27,7 +26,6 @@ function Carrossel() {
                         alt="Banner do segundo evento"
                     />
                 </div>
-
                 <div className="carousel-item">
                     <img
                         src={bannerEvento3}
@@ -46,7 +44,6 @@ function Carrossel() {
                 <span className="carousel-control-prev-icon" aria-hidden="true" />
                 <span className="visually-hidden">Anterior</span>
             </button>
-
             <button
                 className="carousel-control-next"
                 type="button"

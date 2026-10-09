@@ -104,9 +104,10 @@
 
 .home-eventos-lista {
     display: flex;
-    justify-content: space-evenly;
-    gap: 5%;
-    margin-top: 32px;
+    flex-wrap: wrap;
+    gap: 32px; 
+    justify-content: center; 
+    padding: 20px;
 }
 
 .home-evento-card {
