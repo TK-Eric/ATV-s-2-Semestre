@@ -23,3 +23,18 @@ export interface Evento {
     idTipoEventoNavigation?: TipoEvento | null;
     idInstituicaoNavigation?: instituicao | null;
 }
+
+
+export interface Presenca {
+    idPresenca: string;
+    situacao: string;
+    idEvento: string;
+    idUsuario?: string | null;
+    idEventoNavigation?: Evento | null;
+}
+
+export interface PresencaPayload {
+    situacao: boolean;
+    idEvento: string;
+    idUsuario: string;
+}
