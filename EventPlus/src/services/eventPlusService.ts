@@ -12,33 +12,6 @@ import type {
   Usuario,
 } from "../types/api";
 
-function normalizarTipoEvento(item: TipoEvento): TipoEvento {
-  const titulo = item.titulo || item.tituloTipoEvento || "";
-  return {
-    ...item,
-    titulo,
-    tituloTipoEvento: item.tituloTipoEvento || titulo,
-  };
-}
-
-function normalizarTipoUsuario(item: TipoUsuario): TipoUsuario {
-  const titulo = item.titulo || item.tituloTipoUsuario || "";
-  return {
-    ...item,
-    titulo,
-    tituloTipoUsuario: item.tituloTipoUsuario || titulo,
-  };
-}
-
-function normalizarUsuario(usuario: Usuario): Usuario {
-  return {
-    ...usuario,
-    idTipoUsuarioNavigation: usuario.idTipoUsuarioNavigation
-      ? normalizarTipoUsuario(usuario.idTipoUsuarioNavigation)
-      : null,
-  };
-}
-
 function eventoFormData(payload: EventoPayload) {
   const formData = new FormData();
   formData.append("NomeEvento", payload.nomeEvento);
@@ -97,12 +70,18 @@ export const eventoService = {
 export const tipoEventoService = {
   listar: async () => {
     const { data } = await axiosInstance.get<TipoEvento[]>("/TipoEvento");
-    return data.map(normalizarTipoEvento);
+    return data.map((item) => ({
+      ...item,
+      titulo: item.titulo || item.tituloTipoEvento || "",
+    }));
   },
 
   buscar: async (id: string) => {
     const { data } = await axiosInstance.get<TipoEvento>(`/TipoEvento/${id}`);
-    return normalizarTipoEvento(data);
+    return {
+      ...data,
+      titulo: data.titulo || data.tituloTipoEvento || "",
+    };
   },
 
   cadastrar: async (titulo: string) => {
@@ -110,7 +89,7 @@ export const tipoEventoService = {
       titulo,
       tituloTipoEvento: titulo,
     });
-    return normalizarTipoEvento(data);
+    return data;
   },
 
   atualizar: async (id: string, titulo: string) => {
@@ -118,7 +97,7 @@ export const tipoEventoService = {
       titulo,
       tituloTipoEvento: titulo,
     });
-    return data ? normalizarTipoEvento(data) : undefined;
+    return data;
   },
 
   excluir: async (id: string) => {
@@ -129,12 +108,18 @@ export const tipoEventoService = {
 export const tipoUsuarioService = {
   listar: async () => {
     const { data } = await axiosInstance.get<TipoUsuario[]>("/TipoUsuario");
-    return data.map(normalizarTipoUsuario);
+    return data.map((item) => ({
+      ...item,
+      titulo: item.titulo || item.tituloTipoUsuario || "",
+    }));
   },
 
   buscar: async (id: string) => {
     const { data } = await axiosInstance.get<TipoUsuario>(`/TipoUsuario/${id}`);
-    return normalizarTipoUsuario(data);
+    return {
+      ...data,
+      titulo: data.titulo || data.tituloTipoUsuario || "",
+    };
   },
 
   cadastrar: async (titulo: string) => {
@@ -142,7 +127,7 @@ export const tipoUsuarioService = {
       titulo,
       tituloTipoUsuario: titulo,
     });
-    return normalizarTipoUsuario(data);
+    return data;
   },
 
   atualizar: async (id: string, titulo: string) => {
@@ -150,7 +135,7 @@ export const tipoUsuarioService = {
       titulo,
       tituloTipoUsuario: titulo,
     });
-    return data ? normalizarTipoUsuario(data) : undefined;
+    return data;
   },
 
   excluir: async (id: string) => {
@@ -210,22 +195,22 @@ export const authService = {
 export const usuarioService = {
   async buscar(id: string) {
     const { data } = await axiosInstance.get<Usuario>(`/Usuario/${id}`);
-    return normalizarUsuario(data);
+    return data;
   },
 
   async listar() {
     const { data } = await axiosInstance.get<Usuario[]>("/Usuario");
-    return data.map(normalizarUsuario);
+    return data;
   },
 
   async cadastrar(usuario: Partial<Usuario>) {
     const { data } = await axiosInstance.post<Usuario>("/Usuario", usuario);
-    return normalizarUsuario(data);
+    return data;
   },
 
   async atualizar(id: string, usuario: Partial<Usuario>) {
     const { data } = await axiosInstance.put<Usuario>(`/Usuario/${id}`, usuario);
-    return data ? normalizarUsuario(data) : undefined;
+    return data;
   },
 
   async excluir(id: string) {

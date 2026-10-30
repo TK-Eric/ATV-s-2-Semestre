@@ -44,7 +44,6 @@ function AppRoutes() {
             <Route path="/eventos/:id" element={<DetalhesEvento />} />
             <Route path="/Eventos/:id" element={<DetalhesEvento />} />
 
-            {/* Rotas restritas ao Administrador */}
             <Route
                 path="/CadastroEvento"
                 element={

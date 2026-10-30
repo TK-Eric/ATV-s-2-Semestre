@@ -1,7 +1,6 @@
-﻿using EventPlus.WebAPI.BdContextEvent;
+using EventPlus.WebAPI.BdContextEvent;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
-using EventPlus.WebAPI.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventPlus.WebAPI.Repositories
@@ -19,7 +18,6 @@ namespace EventPlus.WebAPI.Repositories
         {
             comentario.DataComentario = DateTime.Now;
             await _context.Comentario.AddAsync(comentario);
-            //esse metodo adiciona ele no banco, manipular o banco de dados
             await _context.SaveChangesAsync();
         }
 
@@ -65,7 +63,6 @@ namespace EventPlus.WebAPI.Repositories
 
             if (comentarioBuscado != null)
             {
-                // Copia os novos valores para a entidade encontrada
                 _context.Entry(comentarioBuscado).CurrentValues.SetValues(comentario);
                 await _context.SaveChangesAsync();
             }

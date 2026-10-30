@@ -11,7 +11,6 @@
     width: 100%;
 }
 
-/* Esconde todos os slides inativos para mostrar apenas 1 por vez */
 .carrossel-slide {
     display: none;
     width: 100%;
@@ -40,7 +39,6 @@
     display: block;
 }
 
-/* Setas laterais circulares quase translúcidas (esquerda e direita) */
 .carrossel-seta {
     position: absolute;
     top: 50%;
@@ -78,7 +76,6 @@
     right: 24px;
 }
 
-/* Indicadores inferiores (3 bolinhas centralizadas) */
 .carrossel-indicadores {
     position: absolute;
     bottom: 18px;

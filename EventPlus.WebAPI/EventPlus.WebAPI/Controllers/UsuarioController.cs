@@ -1,11 +1,7 @@
-﻿using EventPlus.WebAPI.DTO;
+using EventPlus.WebAPI.DTO;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
-using EventPlus.WebAPI.Repositories;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EventPlus.WebAPI.Controllers
 {
@@ -20,11 +16,6 @@ namespace EventPlus.WebAPI.Controllers
             _usuario = usuario;
         }
 
-        /// <summary>
-        /// Cadastra um usuário
-        /// </summary>
-        /// <param name="dto">Objeto a ser cadastrado</param>
-        /// <returns>Status code e o objeto cadastrado</returns>
         [HttpPost]
         public async Task<IActionResult> Cadastrar([FromBody] UsuarioDTO dto)
         {
@@ -34,7 +25,7 @@ namespace EventPlus.WebAPI.Controllers
                 {
                     Nome = dto.Nome,
                     Email = dto.Email,
-                    Senha = dto.Senha,//obs: a criptografia ocorre dentro do repositório
+                    Senha = dto.Senha,
                     IdTipoUsuario = dto.IdTipoUsuario
                 };
 
@@ -48,10 +39,6 @@ namespace EventPlus.WebAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// Lista todos os usuários
-        /// </summary>
-        /// <returns>Status code e a lista de usuários</returns>
         [HttpGet]
         public async Task<IActionResult> Listar()
         {
@@ -66,11 +53,6 @@ namespace EventPlus.WebAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// Busca um usuário pelo seu id
-        /// </summary>
-        /// <param name="id">Id do usuário a ser buscado</param>
-        /// <returns>Status Code 200 com objeto ou 400</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> BuscarPorId(Guid id)
         {
@@ -80,7 +62,7 @@ namespace EventPlus.WebAPI.Controllers
 
                 if (usuarioBuscado == null)
                 {
-                    return NotFound("Tipo de usuário não encontrado.");
+                    return NotFound("Usuário não encontrado.");
                 }
 
                 return Ok(usuarioBuscado);
@@ -91,11 +73,6 @@ namespace EventPlus.WebAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// Exclui um usuário pelo seu id
-        /// </summary>
-        /// <param name="id">Id do usuário a ser excluido</param>
-        /// <returns>Status Code 204 ou 400</returns>        
         [HttpDelete("{id}")]
         public async Task<IActionResult> Deletar(Guid id)
         {
@@ -104,7 +81,6 @@ namespace EventPlus.WebAPI.Controllers
                 await _usuario.Deletar(id);
 
                 return NoContent();
-
             }
             catch (Exception e)
             {
@@ -112,12 +88,6 @@ namespace EventPlus.WebAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// Atualiza um usuário
-        /// </summary>
-        /// <param name="id">Id do usuário a ser atualizado</param>
-        /// <param name="dto">Objeto com as novas informações</param>
-        /// <returns>Status Code NoContent</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Atualizar(Guid id, [FromBody] UsuarioDTO dto)
         {

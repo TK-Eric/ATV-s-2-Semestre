@@ -13,7 +13,6 @@
   --color-border: #ded9da;
   --font-primary: "Poppins", sans-serif;
 
-  /* Aliases usados nos arquivos existentes */
   --cinza-claro: #ded9da;
   --branco: #ffffff;
   --cor-texto: #17143f;
@@ -52,7 +51,6 @@ body {
   font-family: var(--font-primary);
   color: var(--color-text-dark);
   background: var(--color-white);
-  -webkit-font-smoothing: antialiased;
 }
 
 img {

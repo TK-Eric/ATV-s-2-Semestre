@@ -21,28 +21,24 @@ function Carrossel() {
         setIndiceAtivo((atual) => (atual - 1 + banners.length) % banners.length);
     }, []);
 
-    // Auto-avanço a cada 10 segundos (reinicia o timer se o usuário trocar manualmente)
     useEffect(() => {
         const timer = window.setTimeout(proximo, 10000);
         return () => window.clearTimeout(timer);
     }, [indiceAtivo, proximo]);
 
     return (
-        <section className="carrossel" aria-roledescription="carrossel" aria-label="Banners em destaque">
-            {/* Área dos slides */}
+        <section className="carrossel">
             <div className="carrossel-track">
                 {banners.map((banner, index) => (
                     <div
                         key={index}
                         className={`carrossel-slide ${index === indiceAtivo ? "carrossel-slide--ativo" : ""}`}
-                        aria-hidden={index !== indiceAtivo}
                     >
                         <img src={banner.src} alt={banner.alt} />
                     </div>
                 ))}
             </div>
 
-            {/* Seta esquerda quase translúcida */}
             <button
                 type="button"
                 className="carrossel-seta carrossel-seta--esq"
@@ -52,7 +48,6 @@ function Carrossel() {
                 ‹
             </button>
 
-            {/* Seta direita quase translúcida */}
             <button
                 type="button"
                 className="carrossel-seta carrossel-seta--dir"
@@ -62,7 +57,6 @@ function Carrossel() {
                 ›
             </button>
 
-            {/* Indicadores inferiores (3 bolinhas) */}
             <div className="carrossel-indicadores">
                 {banners.map((_, index) => (
                     <button
@@ -70,8 +64,7 @@ function Carrossel() {
                         type="button"
                         className={`carrossel-bolinha ${index === indiceAtivo ? "carrossel-bolinha--ativa" : ""}`}
                         onClick={() => setIndiceAtivo(index)}
-                        aria-label={`Ir para slide ${index + 1}`}
-                        aria-current={index === indiceAtivo ? "true" : undefined}
+                        aria-label={`Slide ${index + 1}`}
                     />
                 ))}
             </div>

@@ -1,4 +1,4 @@
-﻿using EventPlus.WebAPI.BdContextEvent;
+using EventPlus.WebAPI.BdContextEvent;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
 using EventPlus.WebAPI.Utils;
@@ -47,10 +47,9 @@ namespace EventPlus.WebAPI.Repositories
                 return null;
             }
 
-            // Verifica se a senha digitada corresponde ao hash salvo no banco
             bool senhaValida = Criptografia.CompararHash(senha, usuario.Senha);
 
-            if (!senhaValida) //!: operador de Negação 
+            if (!senhaValida)
             {
                 return null;
             }
@@ -67,7 +66,6 @@ namespace EventPlus.WebAPI.Repositories
 
         public async Task Cadastrar(Usuario usuario)
         {
-            //Criptografamos a senha antes de salvar no banco
             usuario.Senha = Criptografia.GerarHash(usuario.Senha);
 
             await _context.Usuario.AddAsync(usuario);
@@ -89,8 +87,6 @@ namespace EventPlus.WebAPI.Repositories
 
         public async Task<List<Usuario>> Listar()
         {
-            //Alternativa,mas só retorna o id do tipo usuário -> return await _context.Usuario.AsNoTracking().ToListAsync();
-
             return await _context.Usuario
                 .Include(u => u.IdTipoUsuarioNavigation)
                 .AsNoTracking()

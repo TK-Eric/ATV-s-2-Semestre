@@ -1,10 +1,6 @@
-﻿using EventPlus.WebAPI.DTO;
+using EventPlus.WebAPI.DTO;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
-using EventPlus.WebAPI.Repositories;
-using EventPlus.WebAPI.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventPlus.WebAPI.Controllers
@@ -16,13 +12,11 @@ namespace EventPlus.WebAPI.Controllers
         private readonly IComentario _comentario;
         private readonly IModerationService _moderationService;
 
-
         public ComentarioController(IComentario comentario, IModerationService moderationService)
         {
             _comentario = comentario;
             _moderationService = moderationService;
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Cadastrar([FromBody] ComentarioDTO dto)
@@ -50,14 +44,11 @@ namespace EventPlus.WebAPI.Controllers
                 {
                     e.Message,
                     inner = e.InnerException?.Message
-
-
                 });
-
             }
-
         }
-        [HttpPut("{id:Guid}")] 
+
+        [HttpPut("{id:Guid}")]
         public async Task<IActionResult> Atualizar(Guid id, [FromForm] ComentarioDTO dto)
         {
             try
@@ -77,7 +68,7 @@ namespace EventPlus.WebAPI.Controllers
             {
                 return BadRequest(e.Message);
             }
-        } 
+        }
 
         [HttpGet]
         public async Task<IActionResult> Listar()
@@ -107,20 +98,3 @@ namespace EventPlus.WebAPI.Controllers
         }
     }
 }
-
-//CRUDS ?
-
-// Tenho todos os controlers para todos os métodos de cada repositório
-
-// Travas as rotas com Authorize
-
-
-
-//Para quem já testou todas as rotas, iniciar o processo abaixo:
-
-// Iniciar o projeto 2 - Backend
-// 1) Diagrama do banco
-// 2) Diagrama de classe 
-// 3) Validar c/ professores os diagramas
-// 4) Criar o banco
-// 5) Desenvolver a API

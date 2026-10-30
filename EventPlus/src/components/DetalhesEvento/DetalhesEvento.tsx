@@ -39,7 +39,7 @@ function DetalhesEvento() {
             }
         }
 
-        void carregar();
+        carregar();
     }, [id]);
 
     useEffect(() => {
@@ -51,13 +51,13 @@ function DetalhesEvento() {
                 const atual = presencas.find((p) => p.idEvento === id && p.situacao);
                 setPresenca(atual ?? null);
             } catch {
-                // Silêncio em caso de erro ao carregar presenças
+                setPresenca(null);
             } finally {
                 setCarregandoPresenca(false);
             }
         }
 
-        void verificarPresenca();
+        verificarPresenca();
     }, [id, usuario?.idUsuario]);
 
     async function handleAcaoInscricao() {
@@ -213,7 +213,7 @@ function DetalhesEvento() {
                         texto={textoBotao}
                         type="button"
                         disabled={carregandoPresenca || enviandoInscricao}
-                        onClick={() => void handleAcaoInscricao()}
+                        onClick={handleAcaoInscricao}
                     />
                 </aside>
             </main>
@@ -224,7 +224,7 @@ function DetalhesEvento() {
                 textoConfirmar="Sim, cancelar"
                 textoCancelar="Voltar"
                 carregando={enviandoInscricao}
-                aoConfirmar={() => void handleConfirmarCancelamento()}
+                aoConfirmar={handleConfirmarCancelamento}
                 aoFechar={() => setConfirmandoCancelamento(false)}
             >
                 <p>Tem certeza de que deseja cancelar sua inscrição neste evento?</p>

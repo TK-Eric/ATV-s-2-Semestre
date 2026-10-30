@@ -27,7 +27,6 @@ export const axiosInstance = axios.create({
   },
 });
 
-// Adiciona o token de autenticação a cada requisição
 axiosInstance.interceptors.request.use((config) => {
   try {
     const rawSession = localStorage.getItem(SESSION_STORAGE_KEY);
@@ -38,12 +37,11 @@ axiosInstance.interceptors.request.use((config) => {
       }
     }
   } catch {
-    // Ignora erro de leitura do storage
+    return config;
   }
   return config;
 });
 
-// Trata respostas com erro 401 para deslogar
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {

@@ -35,30 +35,19 @@ function TipoUsuarios() {
     }, []);
 
     useEffect(() => {
-        let ativo = true;
-
-        async function carregarInicial() {
+        async function carregarDados() {
             try {
                 const dados = await tipoUsuarioService.listar();
-                if (!ativo) return;
                 setTiposUsuarios(dados);
             } catch (error) {
-                if (ativo) {
-                    setTipoMensagem("erro");
-                    setMensagem(getApiErrorMessage(error));
-                }
+                setTipoMensagem("erro");
+                setMensagem(getApiErrorMessage(error));
             } finally {
-                if (ativo) {
-                    setCarregando(false);
-                }
+                setCarregando(false);
             }
         }
 
-        void carregarInicial();
-
-        return () => {
-            ativo = false;
-        };
+        carregarDados();
     }, []);
 
     function cancelarEdicao() {
@@ -141,7 +130,6 @@ function TipoUsuarios() {
                         {mensagem && (
                             <p
                                 className={`tipo-usuarios-alerta tipo-usuarios-alerta--${tipoMensagem}`}
-                                role="alert"
                             >
                                 {mensagem}
                             </p>
@@ -149,7 +137,7 @@ function TipoUsuarios() {
 
                         <div className="tipo-usuarios-conteudo">
                             <div className="tipo-usuarios-ilustracao">
-                                <img src={visaoImg} alt="Ilustração Cadastro de Tipo de Usuário" />
+                                <img src={visaoImg} alt="Cadastro de Tipo de Usuário" />
                             </div>
 
                             <form className="tipo-usuarios-form" onSubmit={salvarTipoUsuario}>
@@ -212,7 +200,7 @@ function TipoUsuarios() {
                                     {carregando ? (
                                         <tr>
                                             <td colSpan={3} className="lista-tipos-tabela-vazia">
-                                                Carregando tipos de usuários...
+                                                Carregando...
                                             </td>
                                         </tr>
                                     ) : tiposUsuarios.length === 0 ? (
@@ -239,7 +227,6 @@ function TipoUsuarios() {
                                                         <button
                                                             type="button"
                                                             className="lista-tipos-acao"
-                                                            aria-label={`Editar ${nomeTipo}`}
                                                             onClick={() => iniciarEdicao(tipo)}
                                                         >
                                                             <img src={lapis} alt="Editar" />
@@ -249,8 +236,7 @@ function TipoUsuarios() {
                                                         <button
                                                             type="button"
                                                             className="lista-tipos-acao"
-                                                            aria-label={`Excluir ${nomeTipo}`}
-                                                            onClick={() => void excluirTipoUsuario(tipo)}
+                                                            onClick={() => excluirTipoUsuario(tipo)}
                                                         >
                                                             <img src={lixeira} alt="Excluir" />
                                                         </button>

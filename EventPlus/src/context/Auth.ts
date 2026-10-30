@@ -33,5 +33,4 @@ export function perfilEhOrganizador(perfil?: string | null) {
     return perfilEhAdministrador(normalizado) || normalizado === "organizador";
 }
 
-// Compatibilidade com possíveis erros de digitação prévios
 export const perfilEhOrgamizador = perfilEhOrganizador;

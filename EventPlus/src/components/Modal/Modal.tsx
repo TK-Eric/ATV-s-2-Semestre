@@ -27,8 +27,6 @@ function Modal({
     const [animando, setAnimando] = useState(false);
     const timeoutRef = useRef<number | undefined>(undefined);
 
-    // Controla automaticamente a animação de entrada e saída quando "aberto" muda
-    // Controla automaticamente a animação de entrada e saída quando "aberto" muda
     useEffect(() => {
         window.clearTimeout(timeoutRef.current);
 
@@ -55,7 +53,6 @@ function Modal({
         }
     }, [aberto]);
 
-    // Fecha com a tecla Esc
     useEffect(() => {
         if (!renderizado) return;
         function aoPressionarTecla(e: KeyboardEvent) {

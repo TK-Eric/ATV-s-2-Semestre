@@ -45,7 +45,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
             const usuario = await usuarioService.buscar(loginResponse.usuario.idUsuario);
             persist({ ...baseSession, usuario });
         } catch {
-            // Mantém a baseSession caso a busca falhe
+            return;
         }
     }
 

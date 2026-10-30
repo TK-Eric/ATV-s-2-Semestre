@@ -35,30 +35,19 @@ function TipoEventos() {
     }, []);
 
     useEffect(() => {
-        let ativo = true;
-
-        async function carregarInicial() {
+        async function carregarDados() {
             try {
                 const dados = await tipoEventoService.listar();
-                if (!ativo) return;
                 setTiposEventos(dados);
             } catch (error) {
-                if (ativo) {
-                    setTipoMensagem("erro");
-                    setMensagem(getApiErrorMessage(error));
-                }
+                setTipoMensagem("erro");
+                setMensagem(getApiErrorMessage(error));
             } finally {
-                if (ativo) {
-                    setCarregando(false);
-                }
+                setCarregando(false);
             }
         }
 
-        void carregarInicial();
-
-        return () => {
-            ativo = false;
-        };
+        carregarDados();
     }, []);
 
     function cancelarEdicao() {
@@ -141,7 +130,6 @@ function TipoEventos() {
                         {mensagem && (
                             <p
                                 className={`tipo-eventos-alerta tipo-eventos-alerta--${tipoMensagem}`}
-                                role="alert"
                             >
                                 {mensagem}
                             </p>
@@ -149,7 +137,7 @@ function TipoEventos() {
 
                         <div className="tipo-eventos-conteudo">
                             <div className="tipo-eventos-ilustracao">
-                                <img src={visaoImg} alt="Ilustração Cadastro de Tipo de Eventos" />
+                                <img src={visaoImg} alt="Cadastro de Tipo de Eventos" />
                             </div>
 
                             <form className="tipo-eventos-form" onSubmit={salvarTipoEvento}>
@@ -212,7 +200,7 @@ function TipoEventos() {
                                     {carregando ? (
                                         <tr>
                                             <td colSpan={3} className="lista-tipos-tabela-vazia">
-                                                Carregando tipos de eventos...
+                                                Carregando...
                                             </td>
                                         </tr>
                                     ) : tiposEventos.length === 0 ? (
@@ -239,7 +227,6 @@ function TipoEventos() {
                                                         <button
                                                             type="button"
                                                             className="lista-tipos-acao"
-                                                            aria-label={`Editar ${nomeTipo}`}
                                                             onClick={() => iniciarEdicao(tipo)}
                                                         >
                                                             <img src={lapis} alt="Editar" />
@@ -249,8 +236,7 @@ function TipoEventos() {
                                                         <button
                                                             type="button"
                                                             className="lista-tipos-acao"
-                                                            aria-label={`Excluir ${nomeTipo}`}
-                                                            onClick={() => void excluirTipoEvento(tipo)}
+                                                            onClick={() => excluirTipoEvento(tipo)}
                                                         >
                                                             <img src={lixeira} alt="Excluir" />
                                                         </button>

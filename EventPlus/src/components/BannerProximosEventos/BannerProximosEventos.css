@@ -17,7 +17,6 @@
     background-color: var(--color-text-dark, #1A1A2E);
 }
 
-/* Animação idêntica ao Carrossel */
 .proximo-slide {
     position: absolute;
     inset: 0;
@@ -188,7 +187,6 @@
     right: 0.75rem;
 }
 
-/* Responsividade desktop / tablets */
 @media (min-width: 768px) {
     .proximo-card {
         min-height: 380px;

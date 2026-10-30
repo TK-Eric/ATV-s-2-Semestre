@@ -5,7 +5,6 @@ import bannerPadrao1 from "../../assets/banner-1.png";
 import bannerPadrao2 from "../../assets/banner-2.png";
 import bannerPadrao3 from "../../assets/banner-3.png";
 
-// Imports da API
 import { eventoService } from "../../services/eventPlusService";
 import type { Evento } from "../../types/api";
 
@@ -17,10 +16,8 @@ import CardEvento from "../../components/CardEvento/CardEvento";
 import "./Home.css";
 
 function Home() {
-    // 1. Estado para guardar os eventos da API
     const [eventos, setEventos] = useState<Evento[]>([]);
 
-    // 2. Chamada à API ao carregar a página
     useEffect(() => {
         async function carregarProximos() {
             try {
@@ -32,10 +29,9 @@ function Home() {
                 console.error("Erro ao carregar próximos eventos:", error);
             }
         }
-        void carregarProximos();
+        carregarProximos();
     }, []);
 
-    // Se a API não estiver conectada, usa os 3 cards padrão do layout Figma
     const eventosExibicao: Evento[] =
         eventos.length > 0
             ? eventos
@@ -71,12 +67,10 @@ function Home() {
             <Header />
 
             <main>
-                {/* 1. Carrossel de Banners */}
                 <section id="inicio" className="home-banner">
                     <Carrossel />
                 </section>
 
-                {/* 2. Seção Visão */}
                 <section className="home-visao">
                     <div className="home-visao-container">
                         <div className="home-visao-circulo">
@@ -98,7 +92,6 @@ function Home() {
                     </div>
                 </section>
 
-                {/* 3. Seção Próximos Eventos */}
                 <section id="eventos" className="home-eventos">
                     <div className="home-eventos-titulo">
                         <h2>PRÓXIMOS EVENTOS</h2>
@@ -123,7 +116,6 @@ function Home() {
                     </div>
                 </section>
 
-                {/* 4. Seção Contato */}
                 <section id="contato" className="home-contato">
                     <div className="home-contato-titulo">
                         <h2>CONTATO</h2>

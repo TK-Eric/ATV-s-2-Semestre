@@ -6,16 +6,10 @@
     background-color: var(--color-white);
 }
 
-/* =========================================
-   1. Banner / Carrossel
-========================================= */
 .home-banner {
     width: 100%;
 }
 
-/* =========================================
-   2. Seção Visão
-========================================= */
 .home-visao {
     background-color: var(--color-crimson);
     width: 100%;
@@ -74,9 +68,6 @@
     margin: 0;
 }
 
-/* =========================================
-   3. Seção Próximos Eventos
-========================================= */
 .home-eventos {
     width: min(1200px, calc(100% - 48px));
     margin: 0 auto;
@@ -115,9 +106,6 @@
     align-items: stretch;
 }
 
-/* =========================================
-   4. Seção Contato
-========================================= */
 .home-contato {
     background-color: var(--color-crimson);
     width: 100%;
@@ -198,9 +186,6 @@
     display: block;
 }
 
-/* =========================================
-   Responsividade
-========================================= */
 @media (max-width: 868px) {
     .home-visao-container {
         flex-direction: column;

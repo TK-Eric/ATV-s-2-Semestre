@@ -39,7 +39,7 @@ export function Eventos() {
             }
         }
 
-        void carregarEventos();
+        carregarEventos();
     }, []);
 
     const eventosBase: Evento[] =
@@ -101,7 +101,7 @@ export function Eventos() {
                             <input
                                 type="search"
                                 className="eventos-busca"
-                                placeholder="Buscar evento por nome, descrição ou categoria..."
+                                placeholder="Buscar evento..."
                                 value={busca}
                                 onChange={(e) => setBusca(e.target.value)}
                             />
@@ -116,7 +116,7 @@ export function Eventos() {
                     <div className="eventos-container">
                         {eventosFiltrados.length === 0 ? (
                             <p className="eventos-vazio">
-                                Nenhum evento encontrado para "{busca}".
+                                Nenhum evento encontrado.
                             </p>
                         ) : (
                             <div className="eventos-grid">

@@ -71,17 +71,13 @@ function CadastroEvento() {
     }, []);
 
     useEffect(() => {
-        let ativo = true;
-
-        async function carregarInicial() {
+        async function carregarDados() {
             try {
                 const [tiposApi, instituicoesApi, eventosApi] = await Promise.all([
                     tipoEventoService.listar(),
                     instituicaoService.listar(),
                     eventoService.listar(),
                 ]);
-
-                if (!ativo) return;
 
                 setTipos(tiposApi);
                 setInstituicoes(instituicoesApi);
@@ -92,22 +88,14 @@ function CadastroEvento() {
                     idInstituicao: value.idInstituicao || instituicoesApi[0]?.idInstituicao || "",
                 }));
             } catch (error) {
-                if (ativo) {
-                    setTipoMensagem("erro");
-                    setMensagem(getApiErrorMessage(error));
-                }
+                setTipoMensagem("erro");
+                setMensagem(getApiErrorMessage(error));
             } finally {
-                if (ativo) {
-                    setCarregando(false);
-                }
+                setCarregando(false);
             }
         }
 
-        void carregarInicial();
-
-        return () => {
-            ativo = false;
-        };
+        carregarDados();
     }, []);
 
     function limparFormulario() {
@@ -202,7 +190,6 @@ function CadastroEvento() {
                         {mensagem && (
                             <p
                                 className={`cadastro-eventos-alerta cadastro-eventos-alerta--${tipoMensagem}`}
-                                role="alert"
                             >
                                 {mensagem}
                             </p>
@@ -210,7 +197,7 @@ function CadastroEvento() {
 
                         <div className="cadastro-eventos-conteudo">
                             <div className="cadastro-eventos-ilustracao">
-                                <img src={visaoImg} alt="Ilustração Cadastro de Eventos" />
+                                <img src={visaoImg} alt="Cadastro de Eventos" />
                             </div>
 
                             <form className="cadastro-eventos-form" onSubmit={salvarEvento}>
@@ -380,7 +367,7 @@ function CadastroEvento() {
                                     {carregando ? (
                                         <tr>
                                             <td colSpan={6} className="lista-tipos-tabela-vazia">
-                                                Carregando eventos...
+                                                Carregando...
                                             </td>
                                         </tr>
                                     ) : eventos.length === 0 ? (
@@ -418,7 +405,6 @@ function CadastroEvento() {
                                                     <button
                                                         type="button"
                                                         className="lista-tipos-acao"
-                                                        aria-label={`Editar ${ev.nomeEvento}`}
                                                         onClick={() => iniciarEdicao(ev)}
                                                     >
                                                         <img src={lapis} alt="Editar" />
@@ -428,8 +414,7 @@ function CadastroEvento() {
                                                     <button
                                                         type="button"
                                                         className="lista-tipos-acao"
-                                                        aria-label={`Excluir ${ev.nomeEvento}`}
-                                                        onClick={() => void removerEvento(ev)}
+                                                        onClick={() => removerEvento(ev)}
                                                     >
                                                         <img src={lixeira} alt="Excluir" />
                                                     </button>
