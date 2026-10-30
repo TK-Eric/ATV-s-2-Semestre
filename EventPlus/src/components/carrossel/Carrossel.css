@@ -1,0 +1,131 @@
+.carrossel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #0b0f19;
+    user-select: none;
+}
+
+.carrossel-track {
+    position: relative;
+    width: 100%;
+}
+
+/* Esconde todos os slides inativos para mostrar apenas 1 por vez */
+.carrossel-slide {
+    display: none;
+    width: 100%;
+}
+
+.carrossel-slide.carrossel-slide--ativo {
+    display: block;
+    animation: carrosselFadeIn 0.5s ease-in-out;
+}
+
+@keyframes carrosselFadeIn {
+    from {
+        opacity: 0.4;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.carrossel-slide img {
+    width: 100%;
+    height: auto;
+    max-height: 540px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* Setas laterais circulares quase translúcidas (esquerda e direita) */
+.carrossel-seta {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.55);
+    color: #17143f;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1;
+    padding: 0 0 3px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.carrossel-seta:hover {
+    background-color: rgba(255, 255, 255, 0.85);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.carrossel-seta--esq {
+    left: 24px;
+}
+
+.carrossel-seta--dir {
+    right: 24px;
+}
+
+/* Indicadores inferiores (3 bolinhas centralizadas) */
+.carrossel-indicadores {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+}
+
+.carrossel-bolinha {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    padding: 0;
+    background-color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.carrossel-bolinha:hover {
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+.carrossel-bolinha--ativa {
+    background-color: #ffffff;
+    transform: scale(1.15);
+}
+
+@media (max-width: 768px) {
+    .carrossel-slide img {
+        height: 280px;
+    }
+
+    .carrossel-seta {
+        width: 36px;
+        height: 36px;
+        font-size: 22px;
+    }
+
+    .carrossel-seta--esq {
+        left: 12px;
+    }
+
+    .carrossel-seta--dir {
+        right: 12px;
+    }
+}

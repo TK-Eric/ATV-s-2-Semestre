@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <!-- Fundo do mapa -->
+  <rect width="400" height="300" rx="20" fill="#2d3247" />
+
+  <!-- Montanhas e sol no topo direito -->
+  <circle cx="300" cy="105" r="14" fill="#cc1540" />
+  <polygon points="275,145 310,85 345,145" fill="#ffffff" />
+  <polygon points="325,145 355,100 385,145" fill="#ffffff" />
+
+  <!-- Malha viária / Ruas -->
+  <!-- Linhas horizontais -->
+  <line x1="20" y1="75" x2="260" y2="75" stroke="#4a5170" stroke-width="6" />
+  <line x1="20" y1="145" x2="380" y2="145" stroke="#4a5170" stroke-width="7" />
+  <line x1="20" y1="210" x2="380" y2="210" stroke="#4a5170" stroke-width="7" />
+  <line x1="20" y1="255" x2="380" y2="255" stroke="#4a5170" stroke-width="5" />
+
+  <!-- Linhas verticais -->
+  <line x1="60" y1="40" x2="60" y2="275" stroke="#4a5170" stroke-width="6" />
+  <line x1="130" y1="40" x2="130" y2="275" stroke="#4a5170" stroke-width="7" />
+  <line x1="230" y1="40" x2="230" y2="275" stroke="#4a5170" stroke-width="7" />
+  <line x1="310" y1="145" x2="310" y2="275" stroke="#4a5170" stroke-width="6" />
+
+  <!-- Curva estilizada de conexão -->
+  <path d="M 60 75 Q 130 110 230 75" fill="none" stroke="#4a5170" stroke-width="4" stroke-dasharray="4,4" />
+
+  <!-- Árvores estilizadas -->
+  <circle cx="95" cy="180" r="7" fill="#ffffff" />
+  <line x1="95" y1="187" x2="95" y2="206" stroke="#ffffff" stroke-width="2" />
+
+  <circle cx="350" cy="180" r="7" fill="#ffffff" />
+  <line x1="350" y1="187" x2="350" y2="206" stroke="#ffffff" stroke-width="2" />
+
+  <circle cx="95" cy="115" r="6" fill="#ffffff" />
+  <line x1="95" y1="121" x2="95" y2="140" stroke="#ffffff" stroke-width="2" />
+
+  <!-- Sombra / Ponto de ancoragem do Pin -->
+  <circle cx="180" cy="225" r="5" fill="#cc1540" />
+
+  <!-- Pino de localização vermelho -->
+  <path d="M 180 130 C 160 130 145 146 145 166 C 145 186 172 216 180 224 C 188 216 215 186 215 166 C 215 146 200 130 180 130 Z" fill="#cc1540" filter="drop-shadow(0px 6px 8px rgba(0,0,0,0.4))" />
+  <!-- Centro branco do pino -->
+  <circle cx="180" cy="162" r="10" fill="#ffffff" />
+</svg>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,6 +14,9 @@ public partial class TipoEvento
     [StringLength(100)]
     [Unicode(false)]
     public string TituloTipoEvento { get; set; } = null!;
+
+    [NotMapped]
+    public string Titulo => TituloTipoEvento;
 
     [InverseProperty("IdTipoEventoNavigation")]
     public virtual ICollection<Evento> Evento { get; set; } = new List<Evento>();

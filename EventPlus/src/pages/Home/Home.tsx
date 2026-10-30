@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
-import logoEvent from "../../assets/logo-event.svg";
 import visao from "../../assets/visao-img.png";
+
+import bannerPadrao1 from "../../assets/banner-1.png";
+import bannerPadrao2 from "../../assets/banner-2.png";
+import bannerPadrao3 from "../../assets/banner-3.png";
 
 // Imports da API
 import { eventoService } from "../../services/eventPlusService";
 import type { Evento } from "../../types/api";
 
-import Carrossel from "../../components/carrossel/Carrossel";
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/footer";
+import Carrossel from "../../components/Carrossel/Carrossel";
 import CardEvento from "../../components/CardEvento/CardEvento";
 
 import "./Home.css";
@@ -20,93 +25,133 @@ function Home() {
         async function carregarProximos() {
             try {
                 const dados = await eventoService.listaProximos();
-                setEventos(dados);
+                if (dados && dados.length > 0) {
+                    setEventos(dados);
+                }
             } catch (error) {
                 console.error("Erro ao carregar próximos eventos:", error);
             }
         }
-        carregarProximos();
+        void carregarProximos();
     }, []);
 
+    // Se a API não estiver conectada, usa os 3 cards padrão do layout Figma
+    const eventosExibicao: Evento[] =
+        eventos.length > 0
+            ? eventos
+            : [
+                  {
+                      idEvento: "1",
+                      nomeEvento: "Título do Evento",
+                      dataEvento: "2026-12-03",
+                      descricao: "Breve descrição do evento, pode ser um parágrafo pequeno",
+                      imagemUrl: bannerPadrao1,
+                      idTipoEventoNavigation: { idTipoEvento: "1", titulo: "Categoria" },
+                  },
+                  {
+                      idEvento: "2",
+                      nomeEvento: "Título do Evento",
+                      dataEvento: "2026-11-08",
+                      descricao: "Breve descrição do evento, pode ser um parágrafo pequeno",
+                      imagemUrl: bannerPadrao2,
+                      idTipoEventoNavigation: { idTipoEvento: "2", titulo: "Categoria" },
+                  },
+                  {
+                      idEvento: "3",
+                      nomeEvento: "Título do Evento",
+                      dataEvento: "2026-10-22",
+                      descricao: "Breve descrição do evento, pode ser um parágrafo pequeno",
+                      imagemUrl: bannerPadrao3,
+                      idTipoEventoNavigation: { idTipoEvento: "3", titulo: "Categoria" },
+                  },
+              ];
+
     return (
-        <>
-            <header className="home-header">
-                <div className="home-header-conteudo">
-                    <img src={logoEvent} alt="Logo Event+" />
-
-                    <nav>
-                        <a href="#inicio">Home</a>
-                        <a href="#eventos">Eventos</a>
-                        <a href="#contato">Contatos</a>
-                    </nav>
-
-                    <button type="button">Entrar</button>
-                </div>
-            </header>
+        <div className="home-pagina">
+            <Header />
 
             <main>
+                {/* 1. Carrossel de Banners */}
                 <section id="inicio" className="home-banner">
                     <Carrossel />
                 </section>
 
+                {/* 2. Seção Visão */}
                 <section className="home-visao">
                     <div className="home-visao-container">
-                        <img
-                            src={visao}
-                            alt="Ilustração representando a visão da Event Plus"
-                        />
+                        <div className="home-visao-circulo">
+                            <img
+                                src={visao}
+                                alt="Ilustração da visão da Event Plus"
+                            />
+                        </div>
 
                         <div className="home-visao-texto">
-                            <h1>Visão</h1>
+                            <h2>VISÃO</h2>
                             <p>
-                                A Event Plus organiza eventos e informações em uma
-                                interface direta, facilitando a consulta da agenda e
-                                a participação dos usuários.
+                                A EventPlus organiza eventos e informações em uma
+                                interface direta, com foco em facilitar a consulta
+                                da agenda, o cadastro e a navegação entre as tela
+                                principais
                             </p>
                         </div>
                     </div>
                 </section>
 
+                {/* 3. Seção Próximos Eventos */}
                 <section id="eventos" className="home-eventos">
                     <div className="home-eventos-titulo">
-                        <h2>Próximos Eventos</h2>
-                        <hr />
+                        <h2>PRÓXIMOS EVENTOS</h2>
+                        <div className="linha-destaque" />
                     </div>
 
                     <div className="home-eventos-lista">
-                        {/* 3. Mapeamento dos dados reais vindos da base de dados */}
-                        {eventos.map((e) => (
+                        {eventosExibicao.map((e) => (
                             <CardEvento
                                 key={e.idEvento}
                                 id={e.idEvento}
-                                titulo={e.nome}
+                                titulo={e.nomeEvento}
                                 imagem={e.imagemUrl || ""}
                                 descricao={e.descricao}
-                                categoria={e.idTipoEventoNavigation?.titulo || "Sem categoria"}
+                                categoria={
+                                    e.idTipoEventoNavigation?.titulo ||
+                                    e.idTipoEventoNavigation?.tituloTipoEvento ||
+                                    "Categoria"
+                                }
                             />
                         ))}
                     </div>
                 </section>
 
+                {/* 4. Seção Contato */}
                 <section id="contato" className="home-contato">
-                    <div>
-                        <h2>Contato</h2>
-                        <p>Rua Niterói, 180 - Centro</p>
-                        <p>São Caetano do Sul - SP</p>
+                    <div className="home-contato-titulo">
+                        <h2>CONTATO</h2>
+                        <div className="linha-destaque-branca" />
                     </div>
 
-                    <iframe
-                        title="Mapa de localização do SENAI São Caetano do Sul"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.6990374600537!2d-46.573299222839175!3d-23.615124263572987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5d11c031c57f%3A0x8f79f71018065a16!2sSENAI%20S%C3%A3o%20Caetano%20do%20Sul%20-%20Cyber%20e%20IA!5e0!3m2!1spt-BR!2sbr!4v1791222612716!5m2!1spt-BR!2sbr"
-                        loading="lazy"
-                    />
+                    <div className="home-contato-container">
+                        <div className="home-contato-dados">
+                            <p>Rua Niterói, 180 – Centro</p>
+                            <p>São Caetano do Sul – SP</p>
+                            <a href="tel:1142252000" className="home-contato-telefone">
+                                (11) 4225-2000
+                            </a>
+                        </div>
+
+                        <div className="home-contato-mapa">
+                            <iframe
+                                title="Mapa de localização do SENAI São Caetano do Sul"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.6990374600537!2d-46.573299222839175!3d-23.615124263572987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5d11c031c57f%3A0x8f79f71018065a16!2sSENAI%20S%C3%A3o%20Caetano%20do%20Sul%20-%20Cyber%20e%20IA!5e0!3m2!1spt-BR!2sbr!4v1791222612716!5m2!1spt-BR!2sbr"
+                                loading="lazy"
+                            />
+                        </div>
+                    </div>
                 </section>
             </main>
 
-            <footer className="home-footer">
-                <p>Escola Senai de Informática - 2026</p>
-            </footer>
-        </>
+            <Footer />
+        </div>
     );
 }
 

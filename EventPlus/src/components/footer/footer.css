@@ -1,6 +1,15 @@
 .home-footer {
-    padding: 24px;
+    width: 100%;
+    padding: 22px 24px;
     text-align: center;
-    background: var(--branco);
-    color: var(--cor-texto);
+    background-color: var(--color-white);
+    border-top: 1px solid #efefef;
+    margin-top: auto;
+}
+
+.home-footer p {
+    margin: 0;
+    color: #555555;
+    font-size: 13px;
+    font-weight: 500;
 }

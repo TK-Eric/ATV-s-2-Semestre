@@ -14,13 +14,15 @@ function CardEvento({ id, imagem, categoria, titulo, descricao }: CardEventoProp
     return (
         <article className="home-evento-card">
             <img src={imagem || imagemPadrao} alt={`imagem do evento ${titulo}`} />
-            <span>{categoria || "Evento"}</span>
-            <div className="home-evento-card-info">
+            <div className="home-evento-card-corpo">
+                <span className="home-evento-card-tag">{categoria || "Categoria"}</span>
                 <h3>{titulo}</h3>
                 <p>{descricao}</p>
-                <Link to={`/Eventos/${id}`} className="home-evento-card-info-botao">
-                    Ver Evento
-                </Link>
+                <div className="home-evento-card-rodape">
+                    <Link to={`/eventos/${id}`} className="home-evento-card-info-botao">
+                        Ver Evento
+                    </Link>
+                </div>
             </div>
         </article>
     ); 

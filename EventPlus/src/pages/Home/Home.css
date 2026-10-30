@@ -1,174 +1,214 @@
-:root {
-    --cinza-claro: #ded9da;
-    --branco: #ffffff;
-    --cor-texto: #17143f;
-    --vermelho: #b51d44;
-    --vermelho-escuro: #821b47;
-    --azul-claro: rgba(0, 80, 251, 0.21);
-}
-
-.home-header {
-    border-bottom: 1px solid var(--cinza-claro);
-    background-color: var(--branco);
-    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.home-header-conteudo {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-    width: min(1200px, calc(100% - 48px));
-    min-height: 60px;
-    margin: 0 auto;
-    padding: 15px 0;
-}
-
-.home-header-conteudo img {
-    width: 130px;
-}
-
-.home-header-conteudo nav {
-    display: flex;
-    gap: 28px;
-}
-
-.home-header-conteudo nav a {
-    text-decoration: none;
-    color: var(--cor-texto);
-}
-
-.home-header-conteudo button {
-    border: none;
-    background: none;
-    color: var(--cor-texto);
-    font-family: "Poppins", Arial, sans-serif;
-    font-size: 17px;
-    cursor: pointer;
-}
-
-.home-banner img {
+.home-pagina {
     width: 100%;
-    max-height: 600px;
-    object-fit: cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-white);
 }
 
+/* =========================================
+   1. Banner / Carrossel
+========================================= */
+.home-banner {
+    width: 100%;
+}
+
+/* =========================================
+   2. Seção Visão
+========================================= */
 .home-visao {
-    background: var(--vermelho);
-}
-
-.home-visao-container,
-.home-eventos,
-.home-contato {
-    width: min(1200px, calc(100% - 48px));
-    margin: 0 auto;
-    padding: 64px 0;
+    background-color: var(--color-crimson);
+    width: 100%;
+    padding: 70px 0;
 }
 
 .home-visao-container {
+    width: min(1100px, calc(100% - 48px));
+    margin: 0 auto;
     display: flex;
-    justify-content: space-around;
     align-items: center;
+    justify-content: center;
+    gap: 80px;
 }
 
-.home-visao img {
-    max-width: 350px;
-    border-radius: 200px;
+.home-visao-circulo {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.home-visao-circulo img {
+    width: 82%;
+    height: auto;
+    object-fit: contain;
 }
 
 .home-visao-texto {
-    color: var(--branco);
-    max-width: 300px;
+    color: var(--color-white);
+    max-width: 440px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
     text-align: center;
 }
 
+.home-visao-texto h2 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    color: var(--color-white);
+}
+
 .home-visao-texto p {
-    margin-top: 5%;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-white);
+    margin: 0;
+}
+
+/* =========================================
+   3. Seção Próximos Eventos
+========================================= */
+.home-eventos {
+    width: min(1200px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 70px 0 80px;
 }
 
 .home-eventos-titulo {
     display: flex;
     flex-direction: column;
-    width: 100%;
     align-items: center;
+    text-align: center;
+    margin-bottom: 40px;
 }
 
-.home-eventos-titulo hr {
-    border: 1px solid var(--vermelho);
-    width: 40%;
+.home-eventos-titulo h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--color-text-dark);
+    margin: 0;
+}
+
+.linha-destaque {
+    width: 50px;
+    height: 2.5px;
+    background-color: var(--color-crimson);
+    border-radius: 2px;
+    margin-top: 8px;
 }
 
 .home-eventos-lista {
     display: flex;
     flex-wrap: wrap;
-    gap: 32px; 
-    justify-content: center; 
-    padding: 20px;
+    gap: 32px;
+    justify-content: center;
+    align-items: stretch;
 }
 
-.home-evento-card {
-    border: 1px solid var(--vermelho-escuro);
-    border-radius: 6px;
-    overflow: hidden;
-    max-width: 350px;
-}
-
-.home-evento-card img {
+/* =========================================
+   4. Seção Contato
+========================================= */
+.home-contato {
+    background-color: var(--color-crimson);
     width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
+    padding: 60px 0 70px;
 }
 
-.home-evento-card span {
-    background-color: var(--azul-claro);
-    border-radius: 12px;
-    padding: 4px 10px;
-    display: inline-block;
-}
-
-.home-evento-card-info {
+.home-contato-titulo {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    margin-bottom: 40px;
 }
 
-.home-evento-card-info button {
-    border: none;
-    background: transparent;
-    color: var(--vermelho);
+.home-contato-titulo h2 {
+    font-size: 20px;
     font-weight: 700;
-    cursor: pointer;
+    letter-spacing: 0.5px;
+    color: var(--color-white);
+    margin: 0;
 }
 
-.home-evento-card h3,
-.home-evento-card p,
-.home-evento-card span,
-.home-evento-card button {
-    margin: 12px 16px;
+.linha-destaque-branca {
+    width: 50px;
+    height: 2.5px;
+    background-color: var(--color-white);
+    border-radius: 2px;
+    margin-top: 8px;
 }
 
-.home-contato {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
+.home-contato-container {
+    width: min(1100px, calc(100% - 48px));
+    margin: 0 auto;
+    display: flex;
     align-items: center;
+    justify-content: space-around;
+    gap: 48px;
 }
 
-.home-contato iframe {
+.home-contato-dados {
+    color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.home-contato-dados p {
+    margin: 0;
+    color: var(--color-white);
+}
+
+.home-contato-telefone {
+    color: var(--color-white);
+    text-decoration: underline;
+    font-size: 18px;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.home-contato-telefone:hover {
+    opacity: 0.85;
+}
+
+.home-contato-mapa {
+    max-width: 480px;
     width: 100%;
-    height: 300px;
-    border: none;
-    border-radius: 8px;
+    flex-shrink: 0;
 }
 
-.home-footer {
-    padding: 24px;
-    text-align: center;
-    background: var(--branco);
-    color: var(--cor-texto);
+.home-contato-mapa iframe {
+    width: 100%;
+    height: 320px;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    display: block;
+}
+
+/* =========================================
+   Responsividade
+========================================= */
+@media (max-width: 868px) {
+    .home-visao-container {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .home-contato-container {
+        flex-direction: column;
+        text-align: center;
+    }
 }

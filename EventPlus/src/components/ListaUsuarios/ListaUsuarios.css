@@ -1,0 +1,27 @@
+.lista-usuarios {
+    background-color: var(--color-crimson);
+    color: var(--color-white);
+    padding: 56px 24px 72px;
+}
+
+.lista-usuarios-tabela {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.lista-usuarios-tabela thead th {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-white);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.45);
+    text-align: left;
+}
+
+.lista-usuarios-tabela tbody td {
+    padding: 16px;
+    font-size: 0.92rem;
+    color: var(--color-white);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    vertical-align: middle;
+}

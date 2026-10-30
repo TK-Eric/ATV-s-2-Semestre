@@ -23,10 +23,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-
-
-
-
 // Adicionando Swagger
 builder.Services.AddSwaggerGen(options =>
 {
@@ -44,13 +40,17 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Registra o EventContext
+var connectionString = builder.Configuration.GetConnectionString("DeafaultConnection")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<EventContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DeafaultConnection")));
+    options.UseSqlServer(connectionString));
 
 // Controllers + JSON ReferenceHandler
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.AllowTrailingCommas = true;
 });
 
 // Injeção de dependência
@@ -59,6 +59,8 @@ builder.Services.AddScoped<ITipoEvento, TipoEventoRepository>();
 builder.Services.AddScoped<IUsuario, UsuarioRepository>();
 builder.Services.AddScoped<IComentario, ComentarioRepository>();
 builder.Services.AddScoped<IEvento, EventoRepository>();
+builder.Services.AddScoped<IInstituicao, InstituicaoRepository>();
+builder.Services.AddScoped<IPresenca, PresencaRepository>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 // Configura a autenticação JWT

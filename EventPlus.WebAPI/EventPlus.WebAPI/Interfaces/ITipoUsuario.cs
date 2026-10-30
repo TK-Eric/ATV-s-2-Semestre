@@ -1,4 +1,4 @@
-﻿using EventPlus.WebAPI.Models;
+using EventPlus.WebAPI.Models;
 
 namespace EventPlus.WebAPI.Interfaces
 {
@@ -12,7 +12,7 @@ namespace EventPlus.WebAPI.Interfaces
 
         Task Deletar(Guid id);
 
-        Task<TipoUsuario> BuscarPorId(Guid id);
+        Task<TipoUsuario?> BuscarPorId(Guid id);
 
     }
 }

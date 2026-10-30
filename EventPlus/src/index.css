@@ -1,22 +1,61 @@
-*{
-  margin: 0;
-  padding: 0;
+:root {
+  --color-crimson: #b51d44;
+  --color-crimson-dark: #821b47;
+  --color-navy: #17143f;
+  --color-category: rgba(0, 80, 251, 0.12);
+  --color-purple: #5c2d7a;
+  --color-wine: #7d1f4e;
+  --color-white: #ffffff;
+  --color-off-white: #f8f8fa;
+  --color-text-dark: #17143f;
+  --color-text-gray: #666666;
+  --color-text-light: #aaaaaa;
+  --color-border: #ded9da;
+  --font-primary: "Poppins", sans-serif;
+
+  /* Aliases usados nos arquivos existentes */
+  --cinza-claro: #ded9da;
+  --branco: #ffffff;
+  --cor-texto: #17143f;
+  --vermelho: #b51d44;
+  --vermelho-escuro: #821b47;
+  --azul-claro: rgba(0, 80, 251, 0.12);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
   box-sizing: border-box;
 }
 
-body{
-  min-width: 320px;
-
-  min-height: 320px;
-
-  font-family: "Poppins", Arial, Helvetica, sans-serif;
-
-  color:#151515;
-
-  background: #FFFFFF;
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  text-align: left;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
 }
 
-img{
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-primary);
+  color: var(--color-text-dark);
+  background: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
   display: block;
   max-width: 100%;
 }
@@ -25,6 +64,15 @@ a,
 button,
 input,
 select,
-textarea{
+textarea {
   font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-primary);
 }

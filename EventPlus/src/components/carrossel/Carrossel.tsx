@@ -1,58 +1,80 @@
+import { useCallback, useEffect, useState } from "react";
 import "./Carrossel.css";
 import bannerEvento1 from "../../assets/banner-1.png";
 import bannerEvento2 from "../../assets/banner-2.png";
 import bannerEvento3 from "../../assets/banner-3.png";
 
+const banners = [
+    { src: bannerEvento1, alt: "NextGen Data Forum 2026" },
+    { src: bannerEvento2, alt: "CodeSphere Week 2026" },
+    { src: bannerEvento3, alt: "TechNova Expo 2026" },
+];
+
 function Carrossel() {
+    const [indiceAtivo, setIndiceAtivo] = useState(0);
+
+    const proximo = useCallback(() => {
+        setIndiceAtivo((atual) => (atual + 1) % banners.length);
+    }, []);
+
+    const anterior = useCallback(() => {
+        setIndiceAtivo((atual) => (atual - 1 + banners.length) % banners.length);
+    }, []);
+
+    // Auto-avanço a cada 10 segundos (reinicia o timer se o usuário trocar manualmente)
+    useEffect(() => {
+        const timer = window.setTimeout(proximo, 10000);
+        return () => window.clearTimeout(timer);
+    }, [indiceAtivo, proximo]);
+
     return (
-        <section
-            id="carrosselEventPlus"
-            className="carousel slide"
-            data-bs-ride="carousel"
-            data-bs-interval="10000"
-        >
-            <div className="carousel-inner">
-                <div className="carousel-item active">
-                    <img
-                        src={bannerEvento1}
-                        className="carousel-banner d-block w-100"
-                        alt="Banner do primeiro evento"
-                    />
-                </div>
-                <div className="carousel-item">
-                    <img
-                        src={bannerEvento2}
-                        className="carousel-banner d-block w-100"
-                        alt="Banner do segundo evento"
-                    />
-                </div>
-                <div className="carousel-item">
-                    <img
-                        src={bannerEvento3}
-                        className="carousel-banner d-block w-100"
-                        alt="Banner do terceiro evento"
-                    />
-                </div>
+        <section className="carrossel" aria-roledescription="carrossel" aria-label="Banners em destaque">
+            {/* Área dos slides */}
+            <div className="carrossel-track">
+                {banners.map((banner, index) => (
+                    <div
+                        key={index}
+                        className={`carrossel-slide ${index === indiceAtivo ? "carrossel-slide--ativo" : ""}`}
+                        aria-hidden={index !== indiceAtivo}
+                    >
+                        <img src={banner.src} alt={banner.alt} />
+                    </div>
+                ))}
             </div>
 
+            {/* Seta esquerda quase translúcida */}
             <button
-                className="carousel-control-prev"
                 type="button"
-                data-bs-target="#carrosselEventPlus"
-                data-bs-slide="prev"
+                className="carrossel-seta carrossel-seta--esq"
+                onClick={anterior}
+                aria-label="Banner anterior"
             >
-                <span className="carousel-control-prev-icon" aria-hidden="true" />
-                <span className="visually-hidden">Anterior</span>
+                ‹
             </button>
+
+            {/* Seta direita quase translúcida */}
             <button
-                className="carousel-control-next"
                 type="button"
-                data-bs-target="#carrosselEventPlus"
-                data-bs-slide="next"
+                className="carrossel-seta carrossel-seta--dir"
+                onClick={proximo}
+                aria-label="Próximo banner"
             >
-                <span className="carousel-control-next-icon" aria-hidden="true" />
-                <span className="visually-hidden">Próximo</span>
+                ›
             </button>
+
+            {/* Indicadores inferiores (3 bolinhas) */}
+            <div className="carrossel-indicadores">
+                {banners.map((_, index) => (
+                    <button
+                        key={index}
+                        type="button"
+                        className={`carrossel-bolinha ${index === indiceAtivo ? "carrossel-bolinha--ativa" : ""}`}
+                        onClick={() => setIndiceAtivo(index)}
+                        aria-label={`Ir para slide ${index + 1}`}
+                        aria-current={index === indiceAtivo ? "true" : undefined}
+                    />
+                ))}
+            </div>
         </section>
     );
 }

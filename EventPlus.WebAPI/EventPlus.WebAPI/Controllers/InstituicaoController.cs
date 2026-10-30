@@ -1,4 +1,4 @@
-﻿using EventPlus.WebAPI.DTO;
+using EventPlus.WebAPI.DTO;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -27,9 +27,6 @@ namespace EventPlus.WebAPI.Controllers
             return Ok(instituicaoBuscada);
         }
 
-        /// <summary>
-        /// Lista todas as instituições
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Listar()
         {
@@ -49,7 +46,9 @@ namespace EventPlus.WebAPI.Controllers
         {
             var instituicao = new Instituicao
             {
-                NomeFantasia = dto.NomeFantasia
+                Cnpj = dto.CNPJ,
+                NomeFantasia = dto.NomeFantasia,
+                Endereco = dto.Endereco
             };
 
             await _instituicao.Cadastrar(instituicao);
@@ -62,10 +61,11 @@ namespace EventPlus.WebAPI.Controllers
         {
             var instituicao = new Instituicao
             {
-                NomeFantasia = dto.NomeFantasia
+                Cnpj = dto.CNPJ,
+                NomeFantasia = dto.NomeFantasia,
+                Endereco = dto.Endereco
             };
 
-            // Corrigido: passa o objeto 'instituicao' e retorna ele no Ok()
             await _instituicao.Atualizar(id, instituicao);
 
             return Ok(instituicao);

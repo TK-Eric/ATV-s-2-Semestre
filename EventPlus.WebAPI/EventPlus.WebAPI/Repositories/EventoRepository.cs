@@ -1,4 +1,4 @@
-﻿using EventPlus.WebAPI.BdContextEvent;
+using EventPlus.WebAPI.BdContextEvent;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +14,11 @@ namespace EventPlus.WebAPI.Repositories
             _context = context;
         }
 
-        public async Task Cadastrar(Evento evento)
+        public async Task<Evento> Cadastrar(Evento evento)
         {
             await _context.Evento.AddAsync(evento);
             await _context.SaveChangesAsync();
+            return evento;
         }
 
         public async Task Atualizar(Guid id, Evento evento)
@@ -30,8 +31,6 @@ namespace EventPlus.WebAPI.Repositories
                 eventoBuscado.DataEvento = evento.DataEvento;
                 eventoBuscado.IdTipoEvento = evento.IdTipoEvento;
                 eventoBuscado.IdInstituicao = evento.IdInstituicao;
-
-
 
                 if (!string.IsNullOrEmpty(evento.ImagemUrl))
                 {
@@ -80,11 +79,6 @@ namespace EventPlus.WebAPI.Repositories
                 .Include(e => e.IdTipoEventoNavigation)
                 .Include(e => e.IdInstituicaoNavigation)
                 .FirstOrDefaultAsync(e => e.IdEvento == id);
-        }
-
-        Task<Evento> IEvento.Cadastrar(Evento evento)
-        {
-            throw new NotImplementedException();
         }
     }
 }

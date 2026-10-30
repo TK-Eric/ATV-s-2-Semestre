@@ -1,4 +1,4 @@
-﻿using EventPlus.WebAPI.BdContextEvent;
+using EventPlus.WebAPI.BdContextEvent;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -38,8 +38,10 @@ namespace EventPlus.WebAPI.Repositories
 
             if (instituicaoBuscada != null)
             {
-                // Copia automaticamente todas as propriedades alteradas sem sobrescrever o ID
-                _dbContext.Entry(instituicaoBuscada).CurrentValues.SetValues(instituicao);
+                instituicaoBuscada.Cnpj = instituicao.Cnpj;
+                instituicaoBuscada.NomeFantasia = instituicao.NomeFantasia;
+                instituicaoBuscada.Endereco = instituicao.Endereco;
+                _dbContext.Instituicao.Update(instituicaoBuscada);
                 await _dbContext.SaveChangesAsync();
             }
         }
