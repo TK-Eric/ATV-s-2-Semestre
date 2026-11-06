@@ -1,0 +1,12 @@
+{
+  "name": "OurMusic — Adequação de Telas e Requisitos",
+  "id": "ourmusic-figma-updater-2026",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  }
+}

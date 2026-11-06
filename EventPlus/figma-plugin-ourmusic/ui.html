@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background: #101311;
+      color: #f2f4ed;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 100vh;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #303831;
+      padding-bottom: 14px;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: #b7e887;
+    }
+    .badge {
+      margin-left: auto;
+      background: #253b24;
+      color: #b7e887;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .card {
+      background: #191d1a;
+      border: 1px solid #303831;
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #b7e887;
+    }
+    .list {
+      font-size: 12px;
+      color: #a2ada3;
+      line-height: 1.5;
+      padding-left: 16px;
+    }
+    .list li {
+      margin-bottom: 4px;
+    }
+    .list strong {
+      color: #f2f4ed;
+    }
+    #log {
+      background: #0b0e0c;
+      border: 1px solid #303831;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: #a2ada3;
+      max-height: 130px;
+      overflow-y: auto;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+    button {
+      height: 42px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      flex: 1;
+      background: #b7e887;
+      color: #152011;
+    }
+    .btn-secondary {
+      background: #222823;
+      color: #f2f4ed;
+      border: 1px solid #303831;
+      padding: 0 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="brand">OurMusic</span>
+    <span class="dot"></span>
+    <span class="badge">RF01–RF15 · SQL</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1. Ajustes nas 8 telas atuais (Remove excessos e alinha ao SQL)</div>
+    <ul class="list">
+      <li>Remove <strong>Álbum</strong>, <strong>Rascunho/Status de publicação</strong>, <strong>Composição/Idioma/Gravadora</strong>, <strong>Último acesso</strong> e <strong>Cadastro público</strong>.</li>
+      <li>Adiciona <strong>Letra</strong> e <strong>Comentário</strong> em Detalhes e Cadastro de Música.</li>
+      <li>Adiciona acesso a <strong>Gêneros</strong> (Admin), <strong>Meu Perfil</strong>, <strong>Cadastrar música</strong> (Usuário) e <strong>Encerrar sessão (Sair)</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2. Criação das 4 telas novas que faltavam (Mesma UX)</div>
+    <ul class="list">
+      <li><strong>Gerenciamento de gêneros</strong> (RF11 / RN11 — Admin)</li>
+      <li><strong>Cadastro e edição de usuário</strong> (RF13, RF14, RF15 / RN01 — Admin)</li>
+      <li><strong>Meu perfil</strong> (RF07 / RN09 / RF02 — Todos os perfis)</li>
+      <li><strong>Confirmação de desativação de usuário</strong> (RF15 / RN04 — Soft Delete)</li>
+    </ul>
+  </div>
+
+  <div id="log">Pronto para aplicar as alterações na Page 1 do seu arquivo do Figma.</div>
+
+  <div class="actions">
+    <button id="closeBtn" class="btn-secondary">Fechar</button>
+    <button id="runBtn" class="btn-primary">Aplicar alterações no Figma</button>
+  </div>
+
+  <script>
+    const runBtn = document.getElementById('runBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const logEl = document.getElementById('log');
+
+    function appendLog(msg) {
+      logEl.textContent += '\n' + msg;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    runBtn.addEventListener('click', () => {
+      runBtn.disabled = true;
+      runBtn.textContent = 'Aplicando no Figma...';
+      logEl.textContent = 'Iniciando atualização das telas OurMusic...';
+      parent.postMessage({ pluginMessage: { type: 'apply-ourmusic' } }, '*');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      parent.postMessage({ pluginMessage: { type: 'close' } }, '*');
+    });
+
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+      if (!msg) return;
+      if (msg.type === 'progress') {
+        appendLog('• ' + msg.text);
+      } else if (msg.type === 'done') {
+        appendLog('\n✅ ' + msg.text);
+        runBtn.textContent = 'Concluído com sucesso!';
+      } else if (msg.type === 'error') {
+        appendLog('\n❌ Erro: ' + msg.text);
+        runBtn.disabled = false;
+        runBtn.textContent = 'Tentar novamente';
+      }
+    };
+  </script>
+</body>
+</html>
